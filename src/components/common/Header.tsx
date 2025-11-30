@@ -3,7 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 export default function Header() {
   return (
-    <AppBar position="static" color="primary" elevation={0}>
+    <AppBar position="fixed" color="primary" elevation={2}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6" fontWeight={600}>
           MCP Chat

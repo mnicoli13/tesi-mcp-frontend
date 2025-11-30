@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { enqueueSnackbar, useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import {
   esse3FetchVotes,
   esse3Login,
@@ -31,6 +31,7 @@ export function useEsse3LoginForm() {
 
   const form = useForm<Esse3LoginFormValues>({
     resolver: yupResolver(schema),
+    mode: 'onChange',
     defaultValues: {
       username: "",
       password: "",
