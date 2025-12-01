@@ -8,8 +8,6 @@ import {
   Alert,
   Card,
   CardContent,
-  Checkbox,
-  FormControlLabel,
   IconButton,
   Chip,
   Dialog,
@@ -27,7 +25,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SchoolIcon from '@mui/icons-material/School';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ExamData, Exam } from '../../types/interview';
 import { examSchema } from '../../schemas/interviewSchemas';
@@ -56,17 +54,13 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
   const [tabValue, setTabValue] = useState(0);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [exams, setExams] = useState<Exam[]>(initialData?.exams || []);
-  const [preferredExams, setPreferredExams] = useState<string[]>(
-    initialData?.preferredExams || []
-  );
-  const [motivation, setMotivation] = useState(initialData?.motivation || '');
   const [importedFromEsse3, setImportedFromEsse3] = useState(
     initialData?.importedFromEsse3 || false
   );
 
   // Form per dialog aggiunta esami
   const {
-    register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -80,16 +74,9 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
     },
   });
 
-  const saveData = (
-    currentExams: Exam[],
-    currentPreferred: string[],
-    currentMotivation: string,
-    fromEsse3: boolean
-  ) => {
+  const saveData = (currentExams: Exam[], fromEsse3: boolean) => {
     const data: ExamData = {
       exams: currentExams,
-      preferredExams: currentPreferred,
-      motivation: currentMotivation,
       importedFromEsse3: fromEsse3,
     };
     onSave(data);
@@ -102,31 +89,15 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
     };
     const updatedExams = [...exams, newExam];
     setExams(updatedExams);
-    saveData(updatedExams, preferredExams, motivation, false);
+    saveData(updatedExams, false);
     reset();
     setOpenAddDialog(false);
   };
 
   const handleDeleteExam = (examId: string) => {
     const updatedExams = exams.filter((e) => e.id !== examId);
-    const updatedPreferred = preferredExams.filter((id) => id !== examId);
     setExams(updatedExams);
-    setPreferredExams(updatedPreferred);
-    saveData(updatedExams, updatedPreferred, motivation, importedFromEsse3);
-  };
-
-  const handleTogglePreferred = (examId: string) => {
-    const updatedPreferred = preferredExams.includes(examId)
-      ? preferredExams.filter((id) => id !== examId)
-      : [...preferredExams, examId];
-    setPreferredExams(updatedPreferred);
-    saveData(exams, updatedPreferred, motivation, importedFromEsse3);
-  };
-
-  const handleMotivationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMotivation = event.target.value;
-    setMotivation(newMotivation);
-    saveData(exams, preferredExams, newMotivation, importedFromEsse3);
+    saveData(updatedExams, importedFromEsse3);
   };
 
   const handleImportFromEsse3 = () => {
@@ -205,16 +176,6 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
             {exams.map((exam) => (
               <Card key={exam.id} elevation={1} sx={{ mb: 2 }}>
                 <ListItem>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={preferredExams.includes(exam.id!)}
-                        onChange={() => handleTogglePreferred(exam.id!)}
-                        color="primary"
-                      />
-                    }
-                    label=""
-                  />
                   <ListItemText
                     primary={
                       <Box display="flex" alignItems="center" gap={1}>
@@ -222,9 +183,6 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
                         <Typography variant="body1" fontWeight={500}>
                           {exam.name}
                         </Typography>
-                        {preferredExams.includes(exam.id!) && (
-                          <Chip label="Preferito" size="small" color="secondary" />
-                        )}
                       </Box>
                     }
                     secondary={
@@ -248,26 +206,6 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
               </Card>
             ))}
           </List>
-
-          {/* Motivazione Preferenze */}
-          {preferredExams.length > 0 && (
-            <Box mt={3}>
-              <Typography variant="body1" gutterBottom fontWeight={500}>
-                Perché hai selezionato questi esami come preferiti? (opzionale)
-              </Typography>
-              <TextField
-                fullWidth
-                multiline
-                rows={4}
-                value={motivation}
-                onChange={handleMotivationChange}
-                placeholder="Es. Questi esami riflettono le aree in cui mi sono sentito più a mio agio e in cui ho ottenuto i migliori risultati..."
-                variant="outlined"
-                helperText={`${motivation.length}/500 caratteri`}
-                inputProps={{ maxLength: 500 }}
-              />
-            </Box>
-          )}
         </Box>
       )}
 
@@ -278,37 +216,55 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
           <DialogContent>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12 }}>
-                <TextField
-                  {...register('name')}
-                  fullWidth
-                  label="Nome Esame *"
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                  variant="outlined"
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Nome Esame *"
+                      error={!!errors.name}
+                      helperText={errors.name?.message}
+                      variant="outlined"
+                    />
+                  )}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
-                <TextField
-                  {...register('grade', { valueAsNumber: true })}
-                  fullWidth
-                  label="Voto *"
-                  type="number"
-                  error={!!errors.grade}
-                  helperText={errors.grade?.message || '18-30 (31 per lode)'}
-                  variant="outlined"
-                  inputProps={{ min: 18, max: 31 }}
+                <Controller
+                  name="grade"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Voto *"
+                      type="number"
+                      error={!!errors.grade}
+                      helperText={errors.grade?.message || '18-30 (31 per lode)'}
+                      variant="outlined"
+                      inputProps={{ min: 18, max: 31 }}
+                    />
+                  )}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
-                <TextField
-                  {...register('ects', { valueAsNumber: true })}
-                  fullWidth
-                  label="CFU *"
-                  type="number"
-                  error={!!errors.ects}
-                  helperText={errors.ects?.message}
-                  variant="outlined"
-                  inputProps={{ min: 1, max: 30 }}
+                <Controller
+                  name="ects"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="CFU *"
+                      type="number"
+                      error={!!errors.ects}
+                      helperText={errors.ects?.message}
+                      variant="outlined"
+                      inputProps={{ min: 1, max: 30 }}
+                    />
+                  )}
                 />
               </Grid>
             </Grid>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
@@ -33,7 +33,6 @@ import {
   personalDataSchema,
   examDataSchema,
   interestsDataSchema,
-  experiencesDataSchema,
   skillsDataSchema,
 } from '../schemas/interviewSchemas';
 import { interviewService } from '../services/interviewService';
@@ -43,7 +42,6 @@ const Interview: React.FC = () => {
   const {
     interviewData,
     currentStep,
-    setCurrentStep,
     savePersonalData,
     saveExamData,
     saveInterestsData,
@@ -57,70 +55,72 @@ const Interview: React.FC = () => {
     isLoading,
   } = useInterview();
 
-  const [canProceed, setCanProceed] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Validate current step data
-  useEffect(() => {
-    validateCurrentStep();
-  }, [currentStep, interviewData]);
-
-  const validateCurrentStep = async () => {
+  const validateCurrentStep =async () => {
     try {
       switch (currentStep) {
         case InterviewStep.PERSONAL:
           if (interviewData.personal) {
             await personalDataSchema.validate(interviewData.personal);
-            setCanProceed(true);
             setValidationError(null);
+            return true;
           } else {
-            setCanProceed(false);
+            console.log("setCanProceed false")
+            return false;
           }
-          break;
+
         case InterviewStep.EXAMS:
           if (interviewData.exams) {
             await examDataSchema.validate(interviewData.exams);
-            setCanProceed(true);
             setValidationError(null);
+            return true;
           } else {
-            setCanProceed(false);
+            console.log("setCanProceed false 2")
+            return false;
           }
-          break;
+
         case InterviewStep.INTERESTS:
           if (interviewData.interests) {
             await interestsDataSchema.validate(interviewData.interests);
-            setCanProceed(true);
             setValidationError(null);
+            return true;
           } else {
-            setCanProceed(false);
+            console.log("setCanProceed false 3")
+            return false;
           }
-          break;
+
         case InterviewStep.EXPERIENCES:
-          // Experiences are optional, always allow proceeding
-          setCanProceed(true);
+          // always valid
           setValidationError(null);
-          break;
+          return true;
+
         case InterviewStep.SKILLS:
           if (interviewData.skills) {
             await skillsDataSchema.validate(interviewData.skills);
-            setCanProceed(true);
             setValidationError(null);
+            return true;
           } else {
-            setCanProceed(false);
+            console.log("setCanProceed false 4")
+            return false;
           }
-          break;
+
         default:
-          setCanProceed(false);
+          console.log("setCanProceed false 5")
+          return false;
       }
     } catch (error: any) {
-      setCanProceed(false);
+      console.log("setCanProceed false 6")
       setValidationError(error.message);
+      return false;
     }
-  };
+  }
 
   const handleNext = async () => {
+
+    const canProceed = await validateCurrentStep();
     if (!canProceed || isSaving) {
       return;
     }
@@ -337,7 +337,7 @@ const Interview: React.FC = () => {
                 <Button
                   variant="contained"
                   onClick={handleNext}
-                  disabled={!canProceed || isLoading || isSaving}
+                  disabled={isLoading || isSaving}
                   endIcon={
                     isSaving ? (
                       <CircularProgress size={20} color="inherit" />

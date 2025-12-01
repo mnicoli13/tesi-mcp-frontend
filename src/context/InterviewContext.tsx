@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import {
   InterviewData,
   InterviewStep,
@@ -66,60 +66,66 @@ export const InterviewProvider: React.FC<InterviewProviderProps> = ({ children }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(interviewData));
   }, [interviewData]);
 
-  const savePersonalData = (data: PersonalData) => {
+  const savePersonalData = useCallback((data: PersonalData) => {
     setInterviewData((prev) => ({ ...prev, personal: data }));
-  };
+  }, []);
 
-  const saveExamData = (data: ExamData) => {
+  const saveExamData = useCallback((data: ExamData) => {
     setInterviewData((prev) => ({ ...prev, exams: data }));
-  };
+  }, []);
 
-  const saveInterestsData = (data: InterestsData) => {
+  const saveInterestsData = useCallback((data: InterestsData) => {
     setInterviewData((prev) => ({ ...prev, interests: data }));
-  };
+  }, []);
 
-  const saveExperiencesData = (data: ExperiencesData) => {
+  const saveExperiencesData = useCallback((data: ExperiencesData) => {
     setInterviewData((prev) => ({ ...prev, experiences: data }));
-  };
+  }, []);
 
-  const saveSkillsData = (data: SkillsData) => {
+  const saveSkillsData = useCallback((data: SkillsData) => {
     setInterviewData((prev) => ({ ...prev, skills: data }));
-  };
+  }, []);
 
-  const markStepCompleted = (step: InterviewStep) => {
+  const markStepCompleted = useCallback((step: InterviewStep) => {
     setInterviewData((prev) => {
       const completedSteps = prev.completedSteps.includes(step)
         ? prev.completedSteps
         : [...prev.completedSteps, step];
       return { ...prev, completedSteps };
     });
-  };
+  }, []);
 
-  const isStepCompleted = (step: InterviewStep): boolean => {
+  const isStepCompleted = useCallback((step: InterviewStep): boolean => {
     return interviewData.completedSteps.includes(step);
-  };
+  }, [interviewData.completedSteps]);
 
-  const canNavigateToStep = (step: InterviewStep): boolean => {
+  const canNavigateToStep = useCallback((step: InterviewStep): boolean => {
     // Può navigare se lo step è completato o se è il successivo all'ultimo completato
     if (step === InterviewStep.PERSONAL) return true;
     
     const previousStep = step - 1;
-    return isStepCompleted(previousStep);
-  };
+    return interviewData.completedSteps.includes(previousStep);
+  }, [interviewData.completedSteps]);
 
-  const goToNextStep = () => {
-    if (currentStep < InterviewStep.SKILLS) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
+  const goToNextStep = useCallback(() => {
+    setCurrentStep((prev) => {
+      if (prev < InterviewStep.SKILLS) {
+        return prev + 1;
+      }
+      return prev;
+    });
+  }, []);
 
-  const goToPreviousStep = () => {
-    if (currentStep > InterviewStep.PERSONAL) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
+  const goToPreviousStep = useCallback(() => {
+    setCurrentStep((prev) => {
+      if (prev > InterviewStep.PERSONAL) {
+        return prev - 1;
+      }
+      return prev;
+    });
+  }, []);
 
-  const completeInterview = async (): Promise<void> => {
+  const completeInterview = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     try {
       // Invia richiesta di completamento al backend
@@ -137,35 +143,51 @@ export const InterviewProvider: React.FC<InterviewProviderProps> = ({ children }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const resetInterview = () => {
+  const resetInterview = useCallback(() => {
     setInterviewData(INITIAL_INTERVIEW_DATA);
     setCurrentStep(InterviewStep.PERSONAL);
     localStorage.removeItem(STORAGE_KEY);
-  };
+  }, []);
+
+  const value = React.useMemo(() => ({
+    interviewData,
+    currentStep,
+    setCurrentStep,
+    savePersonalData,
+    saveExamData,
+    saveInterestsData,
+    saveExperiencesData,
+    saveSkillsData,
+    markStepCompleted,
+    isStepCompleted,
+    canNavigateToStep,
+    goToNextStep,
+    goToPreviousStep,
+    completeInterview,
+    resetInterview,
+    isLoading,
+  }), [
+    interviewData,
+    currentStep,
+    savePersonalData,
+    saveExamData,
+    saveInterestsData,
+    saveExperiencesData,
+    saveSkillsData,
+    markStepCompleted,
+    isStepCompleted,
+    canNavigateToStep,
+    goToNextStep,
+    goToPreviousStep,
+    completeInterview,
+    resetInterview,
+    isLoading
+  ]);
 
   return (
-    <InterviewContext.Provider
-      value={{
-        interviewData,
-        currentStep,
-        setCurrentStep,
-        savePersonalData,
-        saveExamData,
-        saveInterestsData,
-        saveExperiencesData,
-        saveSkillsData,
-        markStepCompleted,
-        isStepCompleted,
-        canNavigateToStep,
-        goToNextStep,
-        goToPreviousStep,
-        completeInterview,
-        resetInterview,
-        isLoading,
-      }}
-    >
+    <InterviewContext.Provider value={value}>
       {children}
     </InterviewContext.Provider>
   );

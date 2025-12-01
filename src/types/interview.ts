@@ -1,9 +1,6 @@
 // Types per i dati dell'intervista in 5 step
 
-export enum DegreeType {
-  BACHELOR = 'bachelor',
-  MASTER = 'master',
-}
+export type DegreeType = 'bachelor' | 'master';
 
 export enum WorkStyle {
   REMOTE = 'remote',
@@ -40,7 +37,7 @@ export interface PersonalData {
   lastName: string;
   age: number;
   university: string;
-  degreeType: DegreeType;
+  degreeType: DegreeType | null;
   courseOfStudy: string;
   graduationYear: number;
 }
@@ -56,8 +53,6 @@ export interface Exam {
 
 export interface ExamData {
   exams: Exam[];
-  preferredExams: string[]; // IDs degli esami preferiti
-  motivation?: string; // Opzionale - perché hai selezionato questi esami
   importedFromEsse3: boolean;
 }
 

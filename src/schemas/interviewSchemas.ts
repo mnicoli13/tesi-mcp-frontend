@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 import {
-  DegreeType,
   WorkStyle,
   CompanyType,
   EnglishLevel,
@@ -30,9 +29,10 @@ export const personalDataSchema = yup.object().shape({
     .required("L'università è obbligatoria")
     .min(3, "Il nome dell'università deve contenere almeno 3 caratteri"),
   degreeType: yup
-    .mixed<DegreeType>()
-    .oneOf(Object.values(DegreeType), 'Seleziona un tipo di laurea valido')
-    .required('Il tipo di laurea è obbligatorio'),
+    .string()
+    .oneOf(['bachelor', 'master'], 'Seleziona un tipo di laurea valido')
+    .required('Il tipo di laurea è obbligatorio')
+    .nullable(),
   courseOfStudy: yup
     .string()
     .required('Il corso di studi è obbligatorio')
