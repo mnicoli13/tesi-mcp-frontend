@@ -1,34 +1,34 @@
 // Types per i dati dell'intervista in 5 step
 
-export type DegreeType = 'bachelor' | 'master';
+export type DegreeType = "bachelor" | "master" | "unselected";
 
 export enum WorkStyle {
-  REMOTE = 'remote',
-  HYBRID = 'hybrid',
-  ONSITE = 'onsite',
+  REMOTE = "remote",
+  HYBRID = "hybrid",
+  ONSITE = "onsite",
 }
 
 export enum CompanyType {
-  STARTUP = 'startup',
-  CORPORATE = 'corporate',
-  CONSULTING = 'consulting',
-  SME = 'sme',
+  STARTUP = "startup",
+  CORPORATE = "corporate",
+  CONSULTING = "consulting",
+  SME = "sme",
 }
 
 export enum EnglishLevel {
-  A1 = 'A1',
-  A2 = 'A2',
-  B1 = 'B1',
-  B2 = 'B2',
-  C1 = 'C1',
-  C2 = 'C2',
-  NATIVE = 'native',
+  A1 = "A1",
+  A2 = "A2",
+  B1 = "B1",
+  B2 = "B2",
+  C1 = "C1",
+  C2 = "C2",
+  NATIVE = "native",
 }
 
 export enum SkillLevel {
-  BASIC = 'basic',
-  INTERMEDIATE = 'intermediate',
-  ADVANCED = 'advanced',
+  BASIC = "basic",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
 }
 
 // Step 1 - Dati Anagrafici
@@ -37,7 +37,7 @@ export interface PersonalData {
   lastName: string;
   age: number;
   university: string;
-  degreeType: DegreeType | null;
+  degreeType: DegreeType;
   courseOfStudy: string;
   graduationYear: number;
 }
@@ -71,7 +71,7 @@ export interface Project {
   description: string;
   technologies: string[];
   githubLink?: string;
-  type: 'university' | 'personal';
+  type: "university" | "personal";
 }
 
 export interface Internship {
@@ -107,13 +107,13 @@ export interface SkillsData {
 
 // Dati completi dell'intervista
 export interface InterviewData {
-  personal: PersonalData | null;
-  exams: ExamData | null;
-  interests: InterestsData | null;
-  experiences: ExperiencesData | null;
-  skills: SkillsData | null;
-  completedSteps: number[]; // Array di step completati (0-4)
+  completedSteps: number[];
   isCompleted: boolean;
+  personal?: PersonalData;
+  exams?: ExamData;
+  interests?: InterestsData;
+  experiences?: ExperiencesData;
+  skills?: SkillsData;
 }
 
 // Step dell'intervista
@@ -126,20 +126,20 @@ export enum InterviewStep {
 }
 
 export const INTERVIEW_STEP_LABELS = [
-  'Anagrafica',
-  'Esami e Voti',
-  'Interessi Professionali',
-  'Esperienze Pratiche',
-  'Skills Tecniche',
+  "Anagrafica",
+  "Esami e Voti",
+  "Interessi Professionali",
+  "Esperienze Pratiche",
+  "Skills Tecniche",
 ];
 
 // Stato iniziale dell'intervista
 export const INITIAL_INTERVIEW_DATA: InterviewData = {
-  personal: null,
-  exams: null,
-  interests: null,
-  experiences: null,
-  skills: null,
+  personal: undefined,
+  exams: undefined,
+  interests: undefined,
+  experiences: undefined,
+  skills: undefined,
   completedSteps: [],
   isCompleted: false,
 };

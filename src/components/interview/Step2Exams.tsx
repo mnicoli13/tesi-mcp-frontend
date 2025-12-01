@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -20,19 +20,19 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import SchoolIcon from '@mui/icons-material/School';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { ExamData, Exam } from '../../types/interview';
-import { examSchema } from '../../schemas/interviewSchemas';
-import { v4 as uuidv4 } from 'uuid';
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import SchoolIcon from "@mui/icons-material/School";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ExamData, Exam } from "../../types/interview";
+import { examSchema } from "../../schemas/interviewSchemas";
+import { v4 as uuidv4 } from "uuid";
 
 interface Step2ExamsProps {
-  initialData: ExamData | null;
+  initialData?: ExamData;
   onSave: (data: ExamData) => void;
 }
 
@@ -64,11 +64,11 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Omit<Exam, 'id'>>({
+  } = useForm<Omit<Exam, "id">>({
     resolver: yupResolver(examSchema) as any,
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
-      name: '',
+      name: "",
       grade: 18,
       ects: 6,
     },
@@ -82,7 +82,7 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
     onSave(data);
   };
 
-  const onSubmitExam = (values: Omit<Exam, 'id'>) => {
+  const onSubmitExam = (values: Omit<Exam, "id">) => {
     const newExam: Exam = {
       id: uuidv4(),
       ...values,
@@ -102,7 +102,7 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
 
   const handleImportFromEsse3 = () => {
     // TODO: Implementare il modal di login ESSE3
-    alert('Funzionalità ESSE3 in arrivo! Per ora usa l\'inserimento manuale.');
+    alert("Funzionalità ESSE3 in arrivo! Per ora usa l'inserimento manuale.");
   };
 
   return (
@@ -111,32 +111,47 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
         Esami e Voti
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={3}>
-        Inserisci i tuoi esami sostenuti con i rispettivi voti e CFU. Potrai selezionare gli esami
-        che hai preferito e che riflettono meglio le tue competenze.
+        Inserisci i tuoi esami sostenuti con i rispettivi voti e CFU. Potrai
+        selezionare gli esami che hai preferito e che riflettono meglio le tue
+        competenze.
       </Typography>
 
       {exams.length === 0 && (
         <Alert severity="info" sx={{ mb: 3 }}>
-          <strong>Suggerimento:</strong> Puoi importare automaticamente i tuoi esami da ESSE3 o
-          inserirli manualmente.
+          <strong>Suggerimento:</strong> Puoi importare automaticamente i tuoi
+          esami da ESSE3 o inserirli manualmente.
         </Alert>
       )}
 
-      <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)} sx={{ mb: 2 }}>
-        <Tab label="Importa da ESSE3" icon={<CloudUploadIcon />} iconPosition="start" />
-        <Tab label="Inserimento Manuale" icon={<AddIcon />} iconPosition="start" />
+      <Tabs
+        value={tabValue}
+        onChange={(_, newValue) => setTabValue(newValue)}
+        sx={{ mb: 2 }}
+      >
+        <Tab
+          label="Importa da ESSE3"
+          icon={<CloudUploadIcon />}
+          iconPosition="start"
+        />
+        <Tab
+          label="Inserimento Manuale"
+          icon={<AddIcon />}
+          iconPosition="start"
+        />
       </Tabs>
 
       <TabPanel value={tabValue} index={0}>
-        <Card elevation={1} sx={{ bgcolor: 'grey.50' }}>
-          <CardContent sx={{ textAlign: 'center', py: 4 }}>
-            <CloudUploadIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+        <Card elevation={1} sx={{ bgcolor: "grey.50" }}>
+          <CardContent sx={{ textAlign: "center", py: 4 }}>
+            <CloudUploadIcon
+              sx={{ fontSize: 64, color: "primary.main", mb: 2 }}
+            />
             <Typography variant="h6" gutterBottom>
               Importa da ESSE3
             </Typography>
             <Typography variant="body2" color="text.secondary" mb={3}>
-              Accedi con le tue credenziali ESSE3 per importare automaticamente tutti i tuoi esami
-              e voti.
+              Accedi con le tue credenziali ESSE3 per importare automaticamente
+              tutti i tuoi esami e voti.
             </Typography>
             <Button
               variant="contained"
@@ -187,7 +202,11 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
                     }
                     secondary={
                       <Box mt={0.5}>
-                        <Chip label={`Voto: ${exam.grade}`} size="small" sx={{ mr: 1 }} />
+                        <Chip
+                          label={`Voto: ${exam.grade}`}
+                          size="small"
+                          sx={{ mr: 1 }}
+                        />
                         <Chip label={`CFU: ${exam.ects}`} size="small" />
                       </Box>
                     }
@@ -210,7 +229,12 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
       )}
 
       {/* Dialog Aggiungi Esame */}
-      <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={openAddDialog}
+        onClose={() => setOpenAddDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Aggiungi Esame</DialogTitle>
         <form onSubmit={handleSubmit(onSubmitExam)}>
           <DialogContent>
@@ -242,7 +266,9 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
                       label="Voto *"
                       type="number"
                       error={!!errors.grade}
-                      helperText={errors.grade?.message || '18-30 (31 per lode)'}
+                      helperText={
+                        errors.grade?.message || "18-30 (31 per lode)"
+                      }
                       variant="outlined"
                       inputProps={{ min: 18, max: 31 }}
                     />

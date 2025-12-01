@@ -1,11 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   PersonalData,
   ExamData,
   InterestsData,
   ExperiencesData,
   SkillsData,
-} from '../types/interview';
+  InterviewData,
+} from "../types/interview";
 import {
   InterviewProgressResponse,
   SaveStepResponse,
@@ -14,12 +15,13 @@ import {
   GenerateCVResponse,
   FindJobsParams,
   FindJobsResponse,
-} from '../types/interviewApi';
+} from "../types/interviewApi";
 
 /**
  * Base URL per le API - configurata tramite variabili d'ambiente
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 /**
  * Istanza axios configurata per le chiamate API dell'intervista
@@ -27,7 +29,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   timeout: 10000,
 });
@@ -37,7 +39,7 @@ const api = axios.create({
  */
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem("auth_token");
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -48,21 +50,19 @@ api.interceptors.request.use(
   }
 );
 
-
-
 /**
  * Interview Service - Gestisce tutte le chiamate API relative all'intervista
  * Allineato con il backend NestJS InterviewController
  */
 export const interviewService = {
   // ==================== PROGRESS ====================
-  
+
   /**
    * GET /interview/progress
    * Recupera lo stato di avanzamento dell'intervista dell'utente autenticato
    */
-  async getProgress(): Promise<InterviewProgressResponse> {
-    const response = await api.get('/interview/progress');
+  async getProgress(): Promise<InterviewData> {
+    const response = await api.get("/interview/progress");
     return response.data;
   },
 
@@ -73,7 +73,7 @@ export const interviewService = {
    * Salva i dati del Step 1 - Anagrafica (prima volta)
    */
   async saveStep1(data: PersonalData): Promise<SaveStepResponse> {
-    const response = await api.post('/interview/step/1', data);
+    const response = await api.post("/interview/step/1", data);
     return response.data;
   },
 
@@ -82,7 +82,7 @@ export const interviewService = {
    * Modifica i dati del Step 1 - Anagrafica (aggiornamento)
    */
   async updateStep1(data: PersonalData): Promise<SaveStepResponse> {
-    const response = await api.put('/interview/step/1', data);
+    const response = await api.put("/interview/step/1", data);
     return response.data;
   },
 
@@ -93,7 +93,7 @@ export const interviewService = {
    * Salva i dati del Step 2 - Esami (prima volta)
    */
   async saveStep2(data: ExamData): Promise<SaveStepResponse> {
-    const response = await api.post('/interview/step/2', data);
+    const response = await api.post("/interview/step/2", data);
     return response.data;
   },
 
@@ -102,7 +102,7 @@ export const interviewService = {
    * Modifica i dati del Step 2 - Esami (aggiornamento)
    */
   async updateStep2(data: ExamData): Promise<SaveStepResponse> {
-    const response = await api.put('/interview/step/2', data);
+    const response = await api.put("/interview/step/2", data);
     return response.data;
   },
 
@@ -113,7 +113,7 @@ export const interviewService = {
    * Salva i dati del Step 3 - Interessi Professionali (prima volta)
    */
   async saveStep3(data: InterestsData): Promise<SaveStepResponse> {
-    const response = await api.post('/interview/step/3', data);
+    const response = await api.post("/interview/step/3", data);
     return response.data;
   },
 
@@ -122,7 +122,7 @@ export const interviewService = {
    * Modifica i dati del Step 3 - Interessi Professionali (aggiornamento)
    */
   async updateStep3(data: InterestsData): Promise<SaveStepResponse> {
-    const response = await api.put('/interview/step/3', data);
+    const response = await api.put("/interview/step/3", data);
     return response.data;
   },
 
@@ -133,7 +133,7 @@ export const interviewService = {
    * Salva i dati del Step 4 - Esperienze Pratiche (prima volta)
    */
   async saveStep4(data: ExperiencesData): Promise<SaveStepResponse> {
-    const response = await api.post('/interview/step/4', data);
+    const response = await api.post("/interview/step/4", data);
     return response.data;
   },
 
@@ -142,7 +142,7 @@ export const interviewService = {
    * Modifica i dati del Step 4 - Esperienze Pratiche (aggiornamento)
    */
   async updateStep4(data: ExperiencesData): Promise<SaveStepResponse> {
-    const response = await api.put('/interview/step/4', data);
+    const response = await api.put("/interview/step/4", data);
     return response.data;
   },
 
@@ -153,7 +153,7 @@ export const interviewService = {
    * Salva i dati del Step 5 - Skills Tecniche (prima volta)
    */
   async saveStep5(data: SkillsData): Promise<SaveStepResponse> {
-    const response = await api.post('/interview/step/5', data);
+    const response = await api.post("/interview/step/5", data);
     return response.data;
   },
 
@@ -162,7 +162,7 @@ export const interviewService = {
    * Modifica i dati del Step 5 - Skills Tecniche (aggiornamento)
    */
   async updateStep5(data: SkillsData): Promise<SaveStepResponse> {
-    const response = await api.put('/interview/step/5', data);
+    const response = await api.put("/interview/step/5", data);
     return response.data;
   },
 
@@ -173,7 +173,7 @@ export const interviewService = {
    * Completa l'intervista (tutti gli step devono essere completati)
    */
   async completeInterview(): Promise<{ success: boolean; message: string }> {
-    const response = await api.post('/interview/complete');
+    const response = await api.post("/interview/complete");
     return response.data;
   },
 
@@ -187,10 +187,15 @@ export const interviewService = {
    */
   async saveStep(
     step: number,
-    data: PersonalData | ExamData | InterestsData | ExperiencesData | SkillsData,
+    data:
+      | PersonalData
+      | ExamData
+      | InterestsData
+      | ExperiencesData
+      | SkillsData,
     isUpdate: boolean = false
   ): Promise<SaveStepResponse> {
-    const method = isUpdate ? 'put' : 'post';
+    const method = isUpdate ? "put" : "post";
     const response = await api[method](`/interview/step/${step}`, data);
     return response.data;
   },
@@ -214,7 +219,7 @@ export const interviewService = {
    * Estrae le skill dal profilo utilizzando il tool MCP extract_skills_from_profile
    */
   async extractSkillsFromProfile(): Promise<ExtractSkillsResponse> {
-    const response = await api.post('/tools/extract-skills');
+    const response = await api.post("/tools/extract-skills");
     return response.data;
   },
 
@@ -223,7 +228,7 @@ export const interviewService = {
    * Suggerisce ruoli e job families basati su esami e voti
    */
   async suggestCareers(): Promise<SuggestCareersResponse> {
-    const response = await api.post('/tools/suggest-careers');
+    const response = await api.post("/tools/suggest-careers");
     return response.data;
   },
 
@@ -232,7 +237,7 @@ export const interviewService = {
    * Genera CV Europass strutturato dal profilo
    */
   async generateCV(): Promise<GenerateCVResponse> {
-    const response = await api.post('/tools/generate-cv');
+    const response = await api.post("/tools/generate-cv");
     return response.data;
   },
 
@@ -241,8 +246,7 @@ export const interviewService = {
    * Cerca offerte lavoro reali (Adzuna, Jooble, JSearch)
    */
   async findJobs(params: FindJobsParams): Promise<FindJobsResponse> {
-    const response = await api.post('/tools/find-jobs', params);
+    const response = await api.post("/tools/find-jobs", params);
     return response.data;
   },
 };
-

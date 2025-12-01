@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Box,
   TextField,
@@ -15,35 +15,39 @@ import {
   FormGroup,
   Checkbox,
   Paper,
-} from '@mui/material';
-import WorkIcon from '@mui/icons-material/Work';
-import BusinessIcon from '@mui/icons-material/Business';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import InterestsIcon from '@mui/icons-material/Lightbulb';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { InterestsData, WorkStyle, CompanyType } from '../../types/interview';
-import { interestsDataSchema } from '../../schemas/interviewSchemas';
+  FormLabel,
+} from "@mui/material";
+import WorkIcon from "@mui/icons-material/Work";
+import BusinessIcon from "@mui/icons-material/Business";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import InterestsIcon from "@mui/icons-material/Lightbulb";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { InterestsData, WorkStyle, CompanyType } from "../../types/interview";
+import { interestsDataSchema } from "../../schemas/interviewSchemas";
 import {
   AREAS_OF_INTEREST,
   ITALIAN_CITIES,
   WORK_STYLE_LABELS,
   COMPANY_TYPE_LABELS,
-} from '../../constants/interviewConstants';
+} from "../../constants/interviewConstants";
 
 interface Step3InterestsProps {
-  initialData: InterestsData | null;
+  initialData?: InterestsData;
   onSave: (data: InterestsData) => void;
 }
 
-const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) => {
+const Step3Interests: React.FC<Step3InterestsProps> = ({
+  initialData,
+  onSave,
+}) => {
   const {
     control,
     watch,
     formState: { errors, isValid, isDirty },
   } = useForm<InterestsData>({
     resolver: yupResolver(interestsDataSchema) as any,
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: initialData || {
       areasOfInterest: [],
       companyType: [],
@@ -67,18 +71,20 @@ const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) 
         Interessi Professionali
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={3}>
-        Aiutaci a capire le tue preferenze lavorative. Queste informazioni ci permetteranno di
-        suggerirti opportunità di carriera in linea con i tuoi interessi.
+        Aiutaci a capire le tue preferenze lavorative. Queste informazioni ci
+        permetteranno di suggerirti opportunità di carriera in linea con i tuoi
+        interessi.
       </Typography>
 
       <Alert severity="info" sx={{ mb: 4 }} icon={<InterestsIcon />}>
-        Questi dati saranno utilizzati dai nostri strumenti di AI per personalizzare i suggerimenti
-        di carriera e filtrare le opportunità più rilevanti per te.
+        Questi dati saranno utilizzati dai nostri strumenti di AI per
+        personalizzare i suggerimenti di carriera e filtrare le opportunità più
+        rilevanti per te.
       </Alert>
 
       <Stack spacing={4}>
         {/* Aree di Interesse */}
-        <Paper elevation={0} sx={{ p: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+        <Paper elevation={0} sx={{ p: 3, bgcolor: "grey.50", borderRadius: 2 }}>
           <Box display="flex" alignItems="center" gap={1} mb={2}>
             <InterestsIcon color="primary" />
             <Typography variant="h6" fontWeight={600}>
@@ -89,43 +95,45 @@ const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) 
             name="areasOfInterest"
             control={control}
             render={({ field }) => (
-              <Autocomplete
-                {...field}
-                multiple
-                options={AREAS_OF_INTEREST}
-                value={field.value}
-                onChange={(_, newValue) => field.onChange(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label="Seleziona le tue aree di interesse *"
-                    placeholder="Cerca..."
-                    error={!!errors.areasOfInterest}
-                    helperText={
-                      errors.areasOfInterest?.message ||
-                      'Seleziona una o più aree tecniche che ti interessano'
-                    }
-                  />
-                )}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip
-                      label={option}
-                      {...getTagProps({ index })}
-                      color="primary"
+              <Stack spacing={1}>
+                <FormLabel>Seleziona le tue aree di interesse *</FormLabel>
+                <Autocomplete
+                  {...field}
+                  multiple
+                  options={AREAS_OF_INTEREST}
+                  value={field.value}
+                  onChange={(_, newValue) => field.onChange(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
                       variant="outlined"
-                      key={option}
+                      placeholder="Cerca..."
+                      error={!!errors.areasOfInterest}
+                      helperText={
+                        errors.areasOfInterest?.message ||
+                        "Seleziona una o più aree tecniche che ti interessano"
+                      }
                     />
-                  ))
-                }
-              />
+                  )}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        label={option}
+                        {...getTagProps({ index })}
+                        color="primary"
+                        variant="outlined"
+                        key={option}
+                      />
+                    ))
+                  }
+                />
+              </Stack>
             )}
           />
         </Paper>
 
         {/* Tipo di Azienda */}
-        <Paper elevation={0} sx={{ p: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+        <Paper elevation={0} sx={{ p: 3, bgcolor: "grey.50", borderRadius: 2 }}>
           <Box display="flex" alignItems="center" gap={1} mb={2}>
             <BusinessIcon color="primary" />
             <Typography variant="h6" fontWeight={600}>
@@ -165,14 +173,18 @@ const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) 
             )}
           />
           {errors.companyType && (
-            <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+            <Typography
+              variant="caption"
+              color="error"
+              sx={{ mt: 1, display: "block" }}
+            >
               {errors.companyType.message}
             </Typography>
           )}
         </Paper>
 
         {/* Stile di Lavoro */}
-        <Paper elevation={0} sx={{ p: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+        <Paper elevation={0} sx={{ p: 3, bgcolor: "grey.50", borderRadius: 2 }}>
           <Box display="flex" alignItems="center" gap={1} mb={2}>
             <WorkIcon color="primary" />
             <Typography variant="h6" fontWeight={600}>
@@ -192,12 +204,14 @@ const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) 
                           elevation={field.value === value ? 3 : 1}
                           sx={{
                             p: 2,
-                            cursor: 'pointer',
+                            cursor: "pointer",
                             border: 2,
                             borderColor:
-                              field.value === value ? 'primary.main' : 'transparent',
-                            transition: 'all 0.2s',
-                            '&:hover': {
+                              field.value === value
+                                ? "primary.main"
+                                : "transparent",
+                            transition: "all 0.2s",
+                            "&:hover": {
                               elevation: 3,
                             },
                           }}
@@ -206,7 +220,7 @@ const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) 
                             value={value}
                             control={<Radio color="primary" />}
                             label={label}
-                            sx={{ width: '100%' }}
+                            sx={{ width: "100%" }}
                           />
                         </Paper>
                       </Grid>
@@ -224,7 +238,7 @@ const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) 
         </Paper>
 
         {/* Preferenze Geografiche */}
-        <Paper elevation={0} sx={{ p: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+        <Paper elevation={0} sx={{ p: 3, bgcolor: "grey.50", borderRadius: 2 }}>
           <Box display="flex" alignItems="center" gap={1} mb={2}>
             <LocationOnIcon color="primary" />
             <Typography variant="h6" fontWeight={600}>
@@ -235,38 +249,40 @@ const Step3Interests: React.FC<Step3InterestsProps> = ({ initialData, onSave }) 
             name="geographicPreferences"
             control={control}
             render={({ field }) => (
-              <Autocomplete
-                {...field}
-                multiple
-                options={ITALIAN_CITIES}
-                value={field.value}
-                onChange={(_, newValue) => field.onChange(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label="Dove vorresti lavorare? *"
-                    placeholder="Aggiungi città..."
-                    error={!!errors.geographicPreferences}
-                    helperText={
-                      errors.geographicPreferences?.message ||
-                      'Seleziona una o più città, "Estero", o "Ovunque"'
-                    }
-                  />
-                )}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip
-                      label={option}
-                      {...getTagProps({ index })}
-                      color="secondary"
+              <Stack spacing={1}>
+                <FormLabel>Dove vorresti lavorare? *</FormLabel>
+                <Autocomplete
+                  {...field}
+                  multiple
+                  options={ITALIAN_CITIES}
+                  value={field.value}
+                  onChange={(_, newValue) => field.onChange(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
                       variant="outlined"
-                      icon={<LocationOnIcon />}
-                      key={option}
+                      placeholder="Aggiungi città..."
+                      error={!!errors.geographicPreferences}
+                      helperText={
+                        errors.geographicPreferences?.message ||
+                        'Seleziona una o più città, "Estero", o "Ovunque"'
+                      }
                     />
-                  ))
-                }
-              />
+                  )}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        label={option}
+                        {...getTagProps({ index })}
+                        color="secondary"
+                        variant="outlined"
+                        icon={<LocationOnIcon />}
+                        key={option}
+                      />
+                    ))
+                  }
+                />
+              </Stack>
             )}
           />
         </Paper>

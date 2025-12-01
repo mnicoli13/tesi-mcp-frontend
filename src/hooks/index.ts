@@ -1,5 +1,5 @@
 /**
  * Barrel export per tutti i custom hooks
  */
-export * from './useLogin';
-export * from './useRegister';
+export * from "./auth/useLogin";
+export * from "./auth/useRegister";

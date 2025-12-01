@@ -1,13 +1,10 @@
-import { AuthProvider } from './context/AuthContext';
-import { InterviewProvider } from './context/InterviewContext';
-import AppRoutes from './routes/AppRoutes';
+import { AuthProvider } from "./context/AuthContext";
+import AppRoutes from "./routes/AppRoutes";
 
 export default function App() {
   return (
     <AuthProvider>
-      <InterviewProvider>
-        <AppRoutes />
-      </InterviewProvider>
+      <AppRoutes />
     </AuthProvider>
   );
 }

@@ -7,6 +7,8 @@ import {
   Autocomplete,
   Typography,
   Alert,
+  FormLabel,
+  Stack,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,7 +20,7 @@ import {
 } from "../../constants/interviewConstants";
 
 interface Step1PersonalProps {
-  initialData: PersonalData | null;
+  initialData?: PersonalData;
   onSave: (data: PersonalData) => void;
 }
 
@@ -31,20 +33,36 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
   const {
     control,
     watch,
+    reset,
     formState: { errors, isValid, isDirty },
   } = useForm<PersonalData>({
     resolver: yupResolver(personalDataSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: initialData?.firstName || "",
-      lastName: initialData?.lastName || "",
-      age: initialData?.age || 18,
-      university: initialData?.university || "",
-      degreeType: initialData?.degreeType || null,
-      courseOfStudy: initialData?.courseOfStudy || "",
-      graduationYear: initialData?.graduationYear || currentYear,
+      firstName: "",
+      lastName: "",
+      age: 18,
+      university: "",
+      degreeType: "unselected",
+      courseOfStudy: "",
+      graduationYear: currentYear,
     },
   });
+
+  // Reset form when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        firstName: initialData.firstName || "",
+        lastName: initialData.lastName || "",
+        age: initialData.age || 18,
+        university: initialData.university || "",
+        degreeType: initialData.degreeType || "unselected",
+        courseOfStudy: initialData.courseOfStudy || "",
+        graduationYear: initialData.graduationYear || currentYear,
+      });
+    }
+  }, [initialData, reset, currentYear]);
 
   // Watch all form values
   const formValues = watch();
@@ -79,14 +97,16 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             name="firstName"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Nome *"
-                error={!!errors.firstName}
-                helperText={errors.firstName?.message}
-                variant="outlined"
-              />
+              <Stack spacing={1}>
+                <FormLabel>Nome *</FormLabel>
+                <TextField
+                  {...field}
+                  fullWidth
+                  error={!!errors.firstName}
+                  helperText={errors.firstName?.message}
+                  variant="outlined"
+                />
+              </Stack>
             )}
           />
         </Grid>
@@ -96,14 +116,16 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             name="lastName"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Cognome *"
-                error={!!errors.lastName}
-                helperText={errors.lastName?.message}
-                variant="outlined"
-              />
+              <Stack spacing={1}>
+                <FormLabel>Cognome *</FormLabel>
+                <TextField
+                  {...field}
+                  fullWidth
+                  error={!!errors.lastName}
+                  helperText={errors.lastName?.message}
+                  variant="outlined"
+                />
+              </Stack>
             )}
           />
         </Grid>
@@ -114,16 +136,18 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             name="age"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Età *"
-                type="number"
-                error={!!errors.age}
-                helperText={errors.age?.message}
-                variant="outlined"
-                inputProps={{ min: 18, max: 100 }}
-              />
+              <Stack spacing={1}>
+                <FormLabel>Età *</FormLabel>
+                <TextField
+                  {...field}
+                  fullWidth
+                  type="number"
+                  error={!!errors.age}
+                  helperText={errors.age?.message}
+                  variant="outlined"
+                  inputProps={{ min: 18, max: 100 }}
+                />
+              </Stack>
             )}
           />
         </Grid>
@@ -135,22 +159,24 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             defaultValue={formValues.university}
             control={control}
             render={({ field }) => (
-              <Autocomplete
-                {...field}
-                options={ITALIAN_UNIVERSITIES}
-                value={field.value || null}
-                onChange={(_, newValue) => field.onChange(newValue || "")}
-                freeSolo
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Università *"
-                    error={!!errors.university}
-                    helperText={errors.university?.message}
-                    variant="outlined"
-                  />
-                )}
-              />
+              <Stack spacing={1}>
+                <FormLabel>Tipo di Laurea *</FormLabel>
+                <Autocomplete
+                  {...field}
+                  options={ITALIAN_UNIVERSITIES}
+                  value={field.value || null}
+                  onChange={(_, newValue) => field.onChange(newValue || "")}
+                  freeSolo
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      error={!!errors.university}
+                      helperText={errors.university?.message}
+                      variant="outlined"
+                    />
+                  )}
+                />
+              </Stack>
             )}
           />
         </Grid>
@@ -162,24 +188,26 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             defaultValue={formValues.degreeType}
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                select
-                label="Tipo di Laurea *"
-                error={!!errors.degreeType}
-                helperText={errors.degreeType?.message}
-                variant="outlined"
-              >
-                <MenuItem value="unselected">
-                  <em>Seleziona...</em>
-                </MenuItem>
-                {Object.entries(DEGREE_TYPE_LABELS).map(([value, label]) => (
-                  <MenuItem key={value} value={value}>
-                    {label}
+              <Stack spacing={1}>
+                <FormLabel>Tipo di Laurea *</FormLabel>
+                <TextField
+                  {...field}
+                  fullWidth
+                  select
+                  error={!!errors.degreeType}
+                  helperText={errors.degreeType?.message}
+                  variant="outlined"
+                >
+                  <MenuItem value="unselected">
+                    <em>Seleziona...</em>
                   </MenuItem>
-                ))}
-              </TextField>
+                  {Object.entries(DEGREE_TYPE_LABELS).map(([value, label]) => (
+                    <MenuItem key={value} value={value}>
+                      {label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
             )}
           />
         </Grid>
@@ -190,19 +218,21 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             name="courseOfStudy"
             defaultValue={formValues.courseOfStudy}
             control={control}
-            render={({ field }) => (
-              <TextField
-                name="courseOfStudy"
-                defaultValue={formValues.courseOfStudy}
-                fullWidth
-                label="Corso di Studi *"
-                error={!!errors.courseOfStudy}
-                helperText={
-                  errors.courseOfStudy?.message ||
-                  "Es. Ingegneria Informatica, Computer Science"
-                }
-                variant="outlined"
-              />
+            render={() => (
+              <Stack spacing={1}>
+                <FormLabel>Corso di Studi *</FormLabel>
+                <TextField
+                  name="courseOfStudy"
+                  defaultValue={formValues.courseOfStudy}
+                  fullWidth
+                  error={!!errors.courseOfStudy}
+                  helperText={
+                    errors.courseOfStudy?.message ||
+                    "Es. Ingegneria Informatica, Computer Science"
+                  }
+                  variant="outlined"
+                />
+              </Stack>
             )}
           />
         </Grid>
@@ -214,18 +244,16 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             defaultValue={formValues.graduationYear}
             control={control}
             render={({}) => (
-              <TextField
-                name="courseOfStudy"
-                defaultValue={formValues.courseOfStudy}
-                fullWidth
-                label="Corso di Studi *"
-                error={!!errors.courseOfStudy}
-                helperText={
-                  errors.courseOfStudy?.message ||
-                  "Es. Ingegneria Informatica, Computer Science"
-                }
-                variant="outlined"
-              />
+              <Stack spacing={1}>
+                <FormLabel>Anno di Laurea *</FormLabel>
+                <TextField
+                  name="courseOfStudy"
+                  defaultValue={formValues.courseOfStudy}
+                  fullWidth
+                  error={!!errors.courseOfStudy}
+                  variant="outlined"
+                />
+              </Stack>
             )}
           />
         </Grid>

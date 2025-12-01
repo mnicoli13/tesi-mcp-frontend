@@ -8,7 +8,7 @@ import {
   InterestsData,
   ExperiencesData,
   SkillsData,
-} from './interview';
+} from "./interview";
 
 /**
  * Risposta standard per il progresso dell'intervista
@@ -16,7 +16,6 @@ import {
 export interface InterviewProgressResponse {
   completedSteps: number[];
   isCompleted: boolean;
-  currentStep: number;
   personal?: PersonalData;
   exams?: ExamData;
   interests?: InterestsData;
