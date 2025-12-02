@@ -31,7 +31,7 @@ export function useEsse3LoginForm() {
 
   const form = useForm<Esse3LoginFormValues>({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       username: "",
       password: "",

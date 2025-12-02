@@ -1,40 +1,29 @@
-import axios from "axios";
-import https from "https";
-import {
-  Esse3JwtLoginResponse,
-  Esse3LoginResponse,
-  LibrettoResponse,
-} from "../../types/esse3";
+import { Exam } from "../../types/interview";
+import api from "../../config/api";
 
-const esse3_base_url = "http://localhost:8080";
-
-export type Esse3LoginProps = {
+export type Esse3ImportExamsProps = {
   username: string;
   password: string;
 };
 
-export type Esse3FetchVotesProps = {
-  mat_id: number;
-  jwt: string;
-};
+export interface Esse3ImportExamsResponse {
+  exams: Exam[];
+}
 
-export const esse3Login = async ({
+/**
+ * Importa gli esami dal libretto ESSE3 dello studente.
+ * Il backend gestisce login, JWT e fetch del libretto internamente.
+ */
+export const esse3ImportExams = async ({
   username,
   password,
-}: Esse3LoginProps): Promise<Esse3LoginResponse> => {
+}: Esse3ImportExamsProps): Promise<Esse3ImportExamsResponse> => {
   try {
-    console.log("esse3Login: ");
-    console.log("username: ", username);
-    console.log("password: ", password);
-
-    const response = await axios.post(`${esse3_base_url}/esse3/login`, {
+    const response = await api.post("/esse3/import-exams", {
       username,
       password,
     });
 
-    console.log("response: ", response);
-    console.log("response.data: ", response.data);
-
     return response.data;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -42,65 +31,7 @@ export const esse3Login = async ({
       error instanceof Error && "response" in error
         ? (error as any).response?.data
         : null;
-    console.error("ESSE3 login error:", errorData || errorMessage);
-    throw error;
-  }
-};
-
-export const esse3LoginJWT = async ({
-  username,
-  password,
-}: Esse3LoginProps): Promise<Esse3JwtLoginResponse> => {
-  try {
-    console.log("esse3LoginJWT: ");
-    console.log("username: ", username);
-    console.log("password: ", password);
-
-    const response = await axios.post(`${esse3_base_url}/esse3/loginJWT`, {
-      username,
-      password,
-    });
-
-    console.log("response: ", response);
-    console.log("response.data: ", response.data);
-
-    return response.data;
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorData =
-      error instanceof Error && "response" in error
-        ? (error as any).response?.data
-        : null;
-    console.error("ESSE3 login JWT error:", errorData || errorMessage);
-    throw error;
-  }
-};
-
-export const esse3FetchVotes = async ({
-  mat_id,
-  jwt,
-}: Esse3FetchVotesProps): Promise<LibrettoResponse> => {
-  try {
-    console.log("esse3FetchVotes: ");
-    console.log("mat_id: ", mat_id);
-    console.log("jwt: ", jwt);
-
-    const response = await axios.post(`${esse3_base_url}/esse3/votes`, {
-      mat_id,
-      jwt,
-    });
-
-    console.log("response: ", response);
-    console.log("response.data: ", response.data);
-
-    return response.data;
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorData =
-      error instanceof Error && "response" in error
-        ? (error as any).response?.data
-        : null;
-    console.error("ESSE3 fet votes error:", errorData || errorMessage);
+    console.error("ESSE3 import exams error:", errorData || errorMessage);
     throw error;
   }
 };

@@ -30,6 +30,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ExamData, Exam } from "../../types/interview";
 import { examSchema } from "../../schemas/interviewSchemas";
 import { v4 as uuidv4 } from "uuid";
+import Esse3ImportDialog from "./dialog/Esse3ImportDialog";
 
 interface Step2ExamsProps {
   initialData?: ExamData;
@@ -53,6 +54,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
 const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
   const [tabValue, setTabValue] = useState(0);
   const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openEsse3Dialog, setOpenEsse3Dialog] = useState(false);
   const [exams, setExams] = useState<Exam[]>(initialData?.exams || []);
   const [importedFromEsse3, setImportedFromEsse3] = useState(
     initialData?.importedFromEsse3 || false
@@ -101,8 +103,21 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
   };
 
   const handleImportFromEsse3 = () => {
-    // TODO: Implementare il modal di login ESSE3
-    alert("Funzionalità ESSE3 in arrivo! Per ora usa l'inserimento manuale.");
+    setOpenEsse3Dialog(true);
+  };
+
+  const handleEsse3ImportSuccess = (importedExams: Exam[]) => {
+    // Aggiungi ID univoci agli esami importati se non ce l'hanno già
+    const examsWithIds = importedExams.map((exam) => ({
+      ...exam,
+      id: exam.id || uuidv4(),
+    }));
+
+    // Aggiungi agli esami esistenti (merge, non sovrascrivere)
+    const updatedExams = [...exams, ...examsWithIds];
+    setExams(updatedExams);
+    setImportedFromEsse3(true);
+    saveData(updatedExams, true);
   };
 
   return (
@@ -303,6 +318,13 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
           </DialogActions>
         </form>
       </Dialog>
+
+      {/* Dialog Import ESSE3 */}
+      <Esse3ImportDialog
+        open={openEsse3Dialog}
+        onClose={() => setOpenEsse3Dialog(false)}
+        onImportSuccess={handleEsse3ImportSuccess}
+      />
     </Box>
   );
 };

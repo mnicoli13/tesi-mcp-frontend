@@ -3,7 +3,7 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../views/Home";
 import Chat from "../views/Chat";
 import About from "../views/About";
-import Esse3 from "../views/Esse3-login";
+// import Esse3 from "../views/Esse3-login";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Interview from "../views/Interview";
@@ -27,15 +27,15 @@ export default function AppRoutes() {
       {/* Layout comune per route protette */}
       <Route element={<MainLayout />}>
         {/* Home - redirect basato su autenticazione */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             isAuthenticated ? (
               <Navigate to="/chat" replace />
             ) : (
               <Navigate to="/login" replace />
             )
-          } 
+          }
         />
 
         {/* Route protette */}
@@ -55,14 +55,14 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/esse3"
           element={
             <ProtectedRoute>
               <Esse3 />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/interview"
           element={
