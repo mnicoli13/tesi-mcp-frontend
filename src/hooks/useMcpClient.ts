@@ -1,11 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { z } from "zod";
 import {
   experimental_createMCPClient as createMCPClient,
   experimental_MCPClient as MCPClient,
 } from "ai";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 
 export const useMcpClient = (url = "http://localhost:8080/mcp") => {
   const [client, setClient] = useState<MCPClient | null>(null);

@@ -12,6 +12,8 @@ import {
   CircularProgress,
   InputAdornment,
   IconButton,
+  Stack,
+  FormLabel,
 } from "@mui/material";
 import { Visibility, VisibilityOff, CloudUpload } from "@mui/icons-material";
 import { Controller } from "react-hook-form";
@@ -66,17 +68,19 @@ const Esse3ImportDialog: React.FC<Esse3ImportDialogProps> = ({
             name="username"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Username ESSE3"
-                error={!!errors.username}
-                helperText={errors.username?.message}
-                required
-                autoComplete="username"
-                disabled={isSubmitting}
-                sx={{ mb: 2 }}
-              />
+              <Stack spacing={1}>
+                <FormLabel>Username ESSE3</FormLabel>
+                <TextField
+                  {...field}
+                  fullWidth
+                  error={!!errors.username}
+                  helperText={errors.username?.message}
+                  required
+                  autoComplete="username"
+                  disabled={isSubmitting}
+                  sx={{ mb: 2 }}
+                />
+              </Stack>
             )}
           />
 
@@ -85,33 +89,37 @@ const Esse3ImportDialog: React.FC<Esse3ImportDialogProps> = ({
             name="password"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                required
-                autoComplete="current-password"
-                disabled={isSubmitting}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label={
-                          showPassword ? "Nascondi password" : "Mostra password"
-                        }
-                        onClick={togglePassword}
-                        edge="end"
-                        disabled={isSubmitting}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <Stack spacing={1}>
+                <FormLabel>Password</FormLabel>
+                <TextField
+                  {...field}
+                  fullWidth
+                  type={showPassword ? "text" : "password"}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  required
+                  autoComplete="current-password"
+                  disabled={isSubmitting}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label={
+                            showPassword
+                              ? "Nascondi password"
+                              : "Mostra password"
+                          }
+                          onClick={togglePassword}
+                          edge="end"
+                          disabled={isSubmitting}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Stack>
             )}
           />
 
