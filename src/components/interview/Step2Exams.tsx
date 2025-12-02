@@ -31,6 +31,7 @@ import { ExamData, Exam } from "../../types/interview";
 import { examSchema } from "../../schemas/interviewSchemas";
 import { v4 as uuidv4 } from "uuid";
 import Esse3ImportDialog from "./dialog/Esse3ImportDialog";
+import ImportExamDialog from "./dialog/ImportExamDialog";
 
 interface Step2ExamsProps {
   initialData?: ExamData;
@@ -244,80 +245,14 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
       )}
 
       {/* Dialog Aggiungi Esame */}
-      <Dialog
-        open={openAddDialog}
-        onClose={() => setOpenAddDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Aggiungi Esame</DialogTitle>
-        <form onSubmit={handleSubmit(onSubmitExam)}>
-          <DialogContent>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12 }}>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Nome Esame *"
-                      error={!!errors.name}
-                      helperText={errors.name?.message}
-                      variant="outlined"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid size={{ xs: 6 }}>
-                <Controller
-                  name="grade"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Voto *"
-                      type="number"
-                      error={!!errors.grade}
-                      helperText={
-                        errors.grade?.message || "18-30 (31 per lode)"
-                      }
-                      variant="outlined"
-                      inputProps={{ min: 18, max: 31 }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid size={{ xs: 6 }}>
-                <Controller
-                  name="ects"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="CFU *"
-                      type="number"
-                      error={!!errors.ects}
-                      helperText={errors.ects?.message}
-                      variant="outlined"
-                      inputProps={{ min: 1, max: 30 }}
-                    />
-                  )}
-                />
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenAddDialog(false)}>Annulla</Button>
-            <Button type="submit" variant="contained" color="primary">
-              Aggiungi
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+      <ImportExamDialog
+        openAddDialog={openAddDialog}
+        setOpenAddDialog={setOpenAddDialog}
+        onSubmitExam={onSubmitExam}
+        control={control}
+        errors={errors}
+        handleSubmit={handleSubmit}
+      />
 
       {/* Dialog Import ESSE3 */}
       <Esse3ImportDialog
