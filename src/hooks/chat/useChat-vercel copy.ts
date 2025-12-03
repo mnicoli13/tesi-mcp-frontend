@@ -1,6 +1,6 @@
 // src/hooks/useChat.ts
 import { useState } from "react";
-import type { Message, RoleType } from "../types/message";
+import type { Message, RoleType } from "../../types/message";
 import { useMcpClient } from "./useMcpClient";
 import { generateText, streamText } from "ai";
 // import { anthropic } from "@ai-sdk/anthropic";

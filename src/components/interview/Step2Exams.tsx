@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  TextField,
-  Grid,
   Button,
   Typography,
   Alert,
@@ -10,10 +8,6 @@ import {
   CardContent,
   IconButton,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Tabs,
   Tab,
   List,
@@ -25,7 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import SchoolIcon from "@mui/icons-material/School";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ExamData, Exam } from "../../types/interview";
 import { examSchema } from "../../schemas/interviewSchemas";

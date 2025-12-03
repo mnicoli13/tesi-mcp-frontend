@@ -6,7 +6,7 @@ export default function Header() {
     <AppBar position="fixed" color="primary" elevation={2}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6" fontWeight={600}>
-          MCP Chat
+          MCP
         </Typography>
 
         <Stack direction="row" spacing={2}>

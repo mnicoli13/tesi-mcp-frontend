@@ -1,17 +1,11 @@
 // src/hooks/useChat.ts
 import { useState } from "react";
-import type { Message, RoleType } from "../types/message";
+import type { Message, RoleType } from "../../types/message";
 import { useMcpClient } from "./useMcpClient";
-import { generateText, streamText } from "ai";
+import { streamText } from "ai";
 // import { anthropic } from "@ai-sdk/anthropic";
 import { v4 as uuidv4 } from "uuid";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-
-type MCPResult = {
-  result?: {
-    content?: Array<{ text?: string }>;
-  };
-};
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
