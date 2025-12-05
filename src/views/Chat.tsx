@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, Paper } from "@mui/material";
+import { Box, Paper, IconButton, alpha } from "@mui/material";
+import { Fullscreen, FullscreenExit } from "@mui/icons-material";
 import ChatHeader from "../components/chat/ChatHeader";
 import ChatMessage from "../components/chat/ChatMessage";
 import ChatInput from "../components/chat/ChatInput";
@@ -9,11 +10,35 @@ import { useChat } from "../hooks/chat/useChat-vercel";
 export default function Chat() {
   const { messages, sendMessage, loading } = useChat();
   const [input, setInput] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.error("Error toggling fullscreen:", error);
+    }
+  };
 
   const handleSend = () => {
     if (input.trim()) {
@@ -61,8 +86,26 @@ export default function Chat() {
           display: "flex",
           flexDirection: "column",
           borderRadius: 2,
+          position: "relative",
         }}
       >
+        <IconButton
+          onClick={toggleFullscreen}
+          sx={{
+            position: "absolute",
+            top: 16,
+            left: 16,
+            zIndex: 10,
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+            color: "primary.main",
+            "&:hover": {
+              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
+            },
+          }}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
+        </IconButton>
         <ChatMessage
           messages={messages}
           loading={loading}

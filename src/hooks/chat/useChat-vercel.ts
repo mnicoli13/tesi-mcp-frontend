@@ -6,6 +6,7 @@ import { streamText } from "ai";
 // import { anthropic } from "@ai-sdk/anthropic";
 import { v4 as uuidv4 } from "uuid";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { wrapUserMessage } from "../../config/prompts";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -24,10 +25,14 @@ export function useChat() {
 
   async function sendMessage(input: string) {
     setLoading(true);
+
+    // Recupera il token JWT per wrappare il messaggio
+    const token = localStorage.getItem("auth_token");
+
     const newMessage = {
       id: uuidv4(),
       role: "user" as RoleType,
-      content: input,
+      content: input, // Messaggio originale mostrato nella UI
     };
 
     const updatedMessages = [...messages, newMessage];
@@ -41,12 +46,16 @@ export function useChat() {
       )
       .map((msg) => ({
         role: msg.role,
-        content: msg.content.trim(),
+        // Wrappa i messaggi utente con il bearer token per il modello AI
+        content:
+          msg.role === "user"
+            ? wrapUserMessage(msg.content.trim(), token)
+            : msg.content.trim(),
       }));
 
     const tools = await getTools();
 
-    console.log("tools: ", tools);
+    console.log("filteredMessages: ", filteredMessages);
 
     try {
       const result = streamText({
