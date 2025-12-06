@@ -58,6 +58,7 @@ export default function Chat() {
     "Use the greeting-tool to greet Nicoli",
     "Tell me about MCP",
     "What tools are available?",
+    "generate cv based on my profile",
   ];
 
   const headerHeight = 64;

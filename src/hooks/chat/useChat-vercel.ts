@@ -6,7 +6,6 @@ import { streamText } from "ai";
 // import { anthropic } from "@ai-sdk/anthropic";
 import { v4 as uuidv4 } from "uuid";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { wrapUserMessage } from "../../config/prompts";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -38,6 +37,7 @@ export function useChat() {
     const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
 
+    // Prepara i messaggi per il modello (senza wrapping)
     const filteredMessages = updatedMessages
       .filter(
         (msg) =>
@@ -46,23 +46,29 @@ export function useChat() {
       )
       .map((msg) => ({
         role: msg.role,
-        // Wrappa i messaggi utente con il bearer token per il modello AI
-        content:
-          msg.role === "user"
-            ? wrapUserMessage(msg.content.trim(), token)
-            : msg.content.trim(),
+        content: msg.content.trim(),
       }));
+
+    // Aggiungi un system message all'inizio se c'è un token
+    const messagesWithSystem = token
+      ? [
+          {
+            role: "system" as const,
+            content: `You are a helpful AI assistant with access to authenticated tools. The user's bearer token is: ${token}. Use the available tools when appropriate to help the user.`,
+          },
+          ...filteredMessages,
+        ]
+      : filteredMessages;
 
     const tools = await getTools();
 
-    console.log("filteredMessages: ", filteredMessages);
+    console.log("messagesWithSystem: ", messagesWithSystem);
 
     try {
       const result = streamText({
         model: openrouter.chat("z-ai/glm-4.5-air:free"),
-        messages: filteredMessages,
+        messages: messagesWithSystem,
         tools,
-        // opzionale: toolChoice: "auto",
       });
 
       const { textStream } = result;
@@ -92,29 +98,19 @@ export function useChat() {
       const resolvedToolResults = await result.toolResults;
 
       if (resolvedToolResults?.length) {
-        const toolText = resolvedToolResults
-          .map((t) => {
-            const output = t.output as
-              | { content?: Array<{ text?: string }> }
-              | undefined;
-            return (
-              output?.content
-                ?.map((c) => c.text)
-                .filter(Boolean)
-                .join("\n") ?? ""
-            );
-          })
-          .filter(Boolean)
-          .join("\n");
+        // Salva i tool results separatamente dal contenuto del messaggio
+        const toolResultsData = resolvedToolResults.map((t) => ({
+          name: t.toolName,
+          result: t.output,
+        }));
 
-        if (toolText) {
-          liveText += (liveText ? "\n" : "") + toolText;
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === aiMessage.id ? { ...msg, content: liveText } : msg
-            )
-          );
-        }
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === aiMessage.id
+              ? { ...msg, toolResults: toolResultsData }
+              : msg
+          )
+        );
       }
 
       setLoading(false);
