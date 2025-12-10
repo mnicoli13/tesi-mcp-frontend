@@ -11,6 +11,7 @@ import { SmartToy } from "@mui/icons-material";
 import MessageBubble from "./MessageBubble";
 import { Message } from "../../types/message";
 import EuropassCVCard from "./EuropassCVCard";
+import SkillsAnalysisCard from "./SkillsAnalysisCard";
 
 type ChatMessagesProps = {
   messages: Message[];
@@ -56,6 +57,21 @@ export default function ChatMessages({
                         }
                       } catch (error) {
                         console.error("Failed to parse CV data:", error);
+                      }
+                    }
+
+                    // Check if this is a Skills Analysis result
+                    if (toolResult.name === "extract_skills_from_profile") {
+                      try {
+                        const content = toolResult.result?.content;
+                        if (Array.isArray(content) && content[0]?.text) {
+                          const skillsData = JSON.parse(content[0].text);
+                          return (
+                            <SkillsAnalysisCard key={j} skills={skillsData} />
+                          );
+                        }
+                      } catch (error) {
+                        console.error("Failed to parse skills data:", error);
                       }
                     }
 
