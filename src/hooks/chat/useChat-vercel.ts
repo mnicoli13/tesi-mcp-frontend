@@ -6,6 +6,7 @@ import { streamText } from "ai";
 // import { anthropic } from "@ai-sdk/anthropic";
 import { v4 as uuidv4 } from "uuid";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { validateAndEnsureToken } from "../../utils/authValidation";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,8 +26,32 @@ export function useChat() {
   async function sendMessage(input: string) {
     setLoading(true);
 
-    // Recupera il token JWT per wrappare il messaggio
-    const token = localStorage.getItem("auth_token");
+    // Valida autenticazione e assicura che il token sia valido (refresh se necessario)
+    const validationResult = await validateAndEnsureToken(5);
+
+    if (!validationResult.success) {
+      setLoading(false);
+
+      const errorMessage = {
+        id: uuidv4(),
+        role: "assistant" as RoleType,
+        content: validationResult.errorMessage || "Errore di autenticazione.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+
+      // Redirect al login se necessario
+      if (validationResult.shouldRedirect) {
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, validationResult.redirectDelay || 2000);
+      }
+
+      return {
+        error: validationResult.errorMessage || "Authentication failed",
+      };
+    }
+
+    const token = validationResult.token!;
 
     const newMessage = {
       id: uuidv4(),

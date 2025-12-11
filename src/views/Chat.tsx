@@ -71,8 +71,6 @@ export default function Chat() {
     <Box
       sx={{
         minHeight: `calc(100vh - ${fixedComponentsHeight}px)`,
-        maxHeight: `calc(100vh - ${fixedComponentsHeight}px)`,
-        height: `calc(100vh - ${fixedComponentsHeight}px)`,
         display: "flex",
         flexDirection: "column",
       }}
