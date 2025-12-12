@@ -11,21 +11,25 @@ Questo è il frontend di una tesi universitaria che sviluppa un sistema completo
 ## 🛠 Stack Tecnologico
 
 ### Core
+
 - **React 18** - UI Framework
 - **TypeScript** - Type safety
 - **Vite** - Build tool e dev server
 - **Material UI (MUI)** - Component library
 
 ### AI Integration
+
 - **Vercel AI SDK** - Chat AI integration
 - **OpenRouter** - LLM provider (Claude, GPT-4)
 - **MCP Protocol** - Model Context Protocol integration
 
 ### State Management & Forms
+
 - **React Context** - Global state
 - **React Hook Form** - Form management
 
 ### Backend Integration
+
 - **Axios** - HTTP client
 - **REST API** - Backend communication
 
@@ -122,7 +126,7 @@ Raccolta dati utente attraverso form guidati:
 Interfaccia chat AI per invocare tools MCP:
 
 - `extract_skills_from_profile` - Analisi skills da esami
-- `suggest_career_job_families` - Suggerimenti ruoli
+- `suggest_career_job_roles` - Suggerimenti ruoli
 - `generate_cv_europass` - Generazione CV
 - `find_jobs` - Ricerca offerte lavoro
 
@@ -135,7 +139,7 @@ Il progetto segue un design system professionale ma moderno, documentato in [`do
 ✅ **Professionale ma Accattivante** - Adatto a contesto universitario  
 ✅ **Coerenza** - Component library unificata  
 ✅ **Accessibilità** - WCAG 2.1 AA compliance  
-✅ **Responsive** - Mobile-first approach  
+✅ **Responsive** - Mobile-first approach
 
 ### Palette Colori
 
@@ -177,15 +181,19 @@ Configurare `VITE_API_BASE_URL` in `.env.local`.
 ## 🧩 Tools MCP Integrati
 
 ### 1. Extract Skills from Profile
+
 Analizza esami sostenuti e inferisce hard/soft skills.
 
 ### 2. Suggest Career & Job Families
+
 Suggerisce ruoli professionali basati su esami, voti e preferenze.
 
 ### 3. Generate CV Europass
+
 Genera curriculum Europass strutturato e personalizzato.
 
 ### 4. Find Jobs
+
 Ricerca offerte di lavoro reali via API esterne (Adzuna, Jooble, JSearch).
 
 ## 📝 Type Safety
@@ -204,17 +212,17 @@ interface MCPToolResponse<T> { ... }
 ### Esempio: Button
 
 ```tsx
-import { Button } from '@mui/material';
+import { Button } from "@mui/material";
 
 <Button variant="contained" color="primary" size="large">
   Avanti
-</Button>
+</Button>;
 ```
 
 ### Esempio: Form Field
 
 ```tsx
-import { TextField } from '@mui/material';
+import { TextField } from "@mui/material";
 
 <TextField
   label="Nome"
@@ -222,7 +230,7 @@ import { TextField } from '@mui/material';
   fullWidth
   error={!!errors.firstName}
   helperText={errors.firstName}
-/>
+/>;
 ```
 
 ## 🔒 Sicurezza

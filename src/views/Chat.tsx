@@ -55,10 +55,10 @@ export default function Chat() {
   };
 
   const quickActions = [
-    "Use the greeting-tool to greet Nicoli",
-    "Tell me about MCP",
     "What tools are available?",
-    "generate cv based on my profile",
+    "Generate cv based on my profile",
+    "Extract skills from my exams",
+    "Suggest career job roles based on my exams",
   ];
 
   const headerHeight = 64;

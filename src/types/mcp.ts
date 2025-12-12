@@ -14,7 +14,7 @@ export interface ExtractSkillsOutput {
   softSkills: string[];
 }
 
-// Tool: suggest_career_job_families
+// Tool: suggest_career_job_roles
 export interface SuggestCareerInput {
   exams: Exam[];
 }
