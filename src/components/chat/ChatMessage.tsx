@@ -12,6 +12,7 @@ import MessageBubble from "./MessageBubble";
 import { Message } from "../../types/message";
 import EuropassCVCard from "./EuropassCVCard";
 import SkillsAnalysisCard from "./SkillsAnalysisCard";
+import CareerRolesCard from "./CareerRolesCard";
 
 type ChatMessagesProps = {
   messages: Message[];
@@ -72,6 +73,21 @@ export default function ChatMessages({
                         }
                       } catch (error) {
                         console.error("Failed to parse skills data:", error);
+                      }
+                    }
+
+                    // Check if this is a Career Roles result
+                    if (toolResult.name === "suggest_career_job_roles") {
+                      try {
+                        const content = toolResult.result?.content;
+                        if (Array.isArray(content) && content[0]?.text) {
+                          const careerData = JSON.parse(content[0].text);
+                          return (
+                            <CareerRolesCard key={j} careerData={careerData} />
+                          );
+                        }
+                      } catch (error) {
+                        console.error("Failed to parse career data:", error);
                       }
                     }
 

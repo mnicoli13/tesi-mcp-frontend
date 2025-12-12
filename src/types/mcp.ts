@@ -21,12 +21,11 @@ export interface SuggestCareerInput {
 
 export interface CareerRole {
   name: string;
-  reason: string;
-  matchScore: number; // 0-100
+  description: string;
+  accuracy: number; // 0-100
 }
 
 export interface SuggestCareerOutput {
-  jobFamilies: string[];
   roles: CareerRole[];
 }
 
