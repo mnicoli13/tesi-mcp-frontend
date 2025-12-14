@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Chip,
   Stack,
   LinearProgress,
   Paper,
@@ -53,12 +52,6 @@ export default function CareerRolesCard({ careerData }: CareerRolesCardProps) {
 
         {/* Roles */}
         <Box>
-          <Typography
-            variant="subtitle2"
-            sx={{ mb: 2, opacity: 0.9, fontWeight: 600 }}
-          >
-            Ruoli Consigliati
-          </Typography>
           <Stack spacing={2}>
             {roles.map((role, index) => (
               <Paper
@@ -88,7 +81,7 @@ export default function CareerRolesCard({ careerData }: CareerRolesCardProps) {
                   <Stack direction="row" spacing={0.5} alignItems="center">
                     <TrendingUp sx={{ fontSize: 18 }} />
                     <Typography variant="body2" fontWeight="bold">
-                      {role.accuracy}%
+                      {role.accuracy.toFixed(2)}%
                     </Typography>
                   </Stack>
                 </Stack>

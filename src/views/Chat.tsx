@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, Paper, IconButton, alpha } from "@mui/material";
 import { Fullscreen, FullscreenExit } from "@mui/icons-material";
-import ChatHeader from "../components/chat/ChatHeader";
-import ChatMessage from "../components/chat/ChatMessage";
+// import ChatHeader from "../components/chat/ChatHeader";
+import ChatMessages from "../components/chat/ChatMessages";
 import ChatInput from "../components/chat/ChatInput";
 import QuickActions from "../components/chat/QuickActions";
 import { useChat } from "../hooks/chat/useChat-vercel";
 
 export default function Chat() {
-  const { messages, sendMessage, loading } = useChat();
+  const { messages, sendMessage, isLoadingText, isToolsRunning, isLoading } =
+    useChat();
   const [input, setInput] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -105,9 +106,11 @@ export default function Chat() {
         >
           {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
         </IconButton>
-        <ChatMessage
+        <ChatMessages
           messages={messages}
-          loading={loading}
+          isLoadingText={isLoadingText}
+          isToolsRunning={isToolsRunning}
+          isLoading={isLoading}
           messagesEndRef={messagesEndRef}
         />
         <QuickActions actions={quickActions} setInput={setInput} />
@@ -116,7 +119,7 @@ export default function Chat() {
           setInput={setInput}
           handleSend={handleSend}
           handleKeyPress={handleKeyPress}
-          loading={loading}
+          loading={isLoadingText}
         />
       </Paper>
     </Box>

@@ -7,6 +7,7 @@ export interface Message {
   id: string;
   role: RoleType;
   content: string;
+  reasoning?: string;
   toolResults?: ToolResult[];
 }
 
