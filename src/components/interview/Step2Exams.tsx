@@ -12,8 +12,7 @@ import {
   Tab,
   List,
   ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
+  Stack,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -200,37 +199,44 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({ initialData, onSave }) => {
           <List>
             {exams.map((exam) => (
               <Card key={exam.id} elevation={1} sx={{ mb: 2 }}>
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <SchoolIcon fontSize="small" color="action" />
-                        <Typography variant="body1" fontWeight={500}>
-                          {exam.name}
-                        </Typography>
-                      </Box>
-                    }
-                    secondary={
-                      <Box mt={0.5}>
-                        <Chip
-                          label={`Voto: ${exam.grade}`}
-                          size="small"
-                          sx={{ mr: 1 }}
-                        />
-                        <Chip label={`CFU: ${exam.ects}`} size="small" />
-                      </Box>
-                    }
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteExam(exam.id!)}
-                      color="error"
+                <ListItem sx={{ minWidth: "100%" }}>
+                  <Box sx={{ minWidth: "100%" }}>
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      gap={2}
+                      justifyContent={"space-between"}
                     >
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
+                      <Stack direction={"column"} gap={1}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <SchoolIcon fontSize="small" color="action" />
+                          <Typography variant="body1" fontWeight={500}>
+                            {exam.name}
+                          </Typography>
+                        </Box>
+
+                        <Box mt={0.5}>
+                          <Chip
+                            label={`Voto: ${exam.grade}`}
+                            size="small"
+                            sx={{ mr: 1 }}
+                          />
+                          <Chip label={`CFU: ${exam.ects}`} size="small" />
+                        </Box>
+                      </Stack>
+
+                      <Box>
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => handleDeleteExam(exam.id!)}
+                          color="error"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </Stack>
+                  </Box>
                 </ListItem>
               </Card>
             ))}
