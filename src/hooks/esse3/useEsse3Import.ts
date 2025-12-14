@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useSnackbar } from "notistack";
 import { esse3ImportExams } from "../../api/esse3/esse3";
+import { encryptPassword } from "../../utils/crypto";
 import { Exam } from "../../types/interview";
 
 export interface Esse3ImportFormValues {
@@ -45,9 +46,12 @@ export function useEsse3Import({ onSuccess, onClose }: UseEsse3ImportProps) {
     setErrorMessage(null);
 
     try {
+      // Cripta la password prima di inviarla al backend
+      const encryptedPassword = encryptPassword(values.password);
+
       const response = await esse3ImportExams({
         username: values.username,
-        password: values.password,
+        password: encryptedPassword,
       });
 
       if (!response.exams || response.exams.length === 0) {

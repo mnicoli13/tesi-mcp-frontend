@@ -160,12 +160,38 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
             control={control}
             render={({ field }) => (
               <Stack spacing={1}>
-                <FormLabel>Tipo di Laurea *</FormLabel>
+                <FormLabel>Università *</FormLabel>
                 <Autocomplete
-                  {...field}
                   options={ITALIAN_UNIVERSITIES}
-                  value={field.value || null}
-                  onChange={(_, newValue) => field.onChange(newValue || "")}
+                  getOptionLabel={(option) => {
+                    if (typeof option === "string") return option;
+                    return option.label;
+                  }}
+                  isOptionEqualToValue={(option, value) => {
+                    if (
+                      typeof option === "string" ||
+                      typeof value === "string"
+                    ) {
+                      return option === value;
+                    }
+                    return option.value === value.value;
+                  }}
+                  value={
+                    ITALIAN_UNIVERSITIES.find(
+                      (uni) => uni.value === field.value
+                    ) ||
+                    field.value ||
+                    null
+                  }
+                  onChange={(_, newValue) => {
+                    // Se newValue è un oggetto, salva il value (ID ateneo)
+                    if (newValue && typeof newValue === "object") {
+                      field.onChange(newValue.value);
+                    } else {
+                      // Se è una stringa (freeSolo), salva la stringa
+                      field.onChange(newValue || "");
+                    }
+                  }}
                   freeSolo
                   renderInput={(params) => (
                     <TextField
