@@ -1,8 +1,8 @@
 import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
-import EuropassCVCard from "./EuropassCVCard";
-import SkillsAnalysisCard from "./SkillsAnalysisCard";
-import CareerRolesCard from "./CareerRolesCard";
-import JobResultsCard from "./JobResultsCard";
+import EuropassCVCard from "./tools/EuropassCVCard";
+import SkillsAnalysisCard from "./tools/SkillsAnalysisCard";
+import CareerRolesCard from "./tools/CareerRolesCard";
+import JobResultsCard from "./tools/JobResultsCard";
 import { ToolResult } from "../../types/message";
 import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
 

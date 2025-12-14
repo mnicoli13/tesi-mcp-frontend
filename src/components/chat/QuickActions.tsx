@@ -1,7 +1,8 @@
 import { Box, Typography, Stack, Chip } from "@mui/material";
+import { QuickAction } from "../../utils/quickActionsData";
 
 type QuickActionsProps = {
-  actions: string[];
+  actions: QuickAction[];
   setInput: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -11,9 +12,6 @@ export default function QuickActions({ actions, setInput }: QuickActionsProps) {
       sx={{
         px: 3,
         py: 2,
-        bgcolor: "grey.50",
-        borderTop: 1,
-        borderColor: "divider",
       }}
     >
       <Stack
@@ -22,28 +20,26 @@ export default function QuickActions({ actions, setInput }: QuickActionsProps) {
         alignItems={"center"}
         sx={{
           overflowX: "auto",
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE and Edge
           "&::-webkit-scrollbar": {
-            height: 6,
-          },
-          "&::-webkit-scrollbar-thumb": {
-            bgcolor: "grey.400",
-            borderRadius: 1,
+            display: "none", // Chrome, Safari, WebKit
           },
         }}
       >
         <Typography
           variant="caption"
           color="text.secondary"
-          sx={{ mb: 1, display: "block" }}
+          sx={{ mb: 1, display: "block", whiteSpace: "nowrap" }}
         >
           Quick Actions:
         </Typography>
         {actions.map((action, i) => (
           <Chip
             key={i}
-            label={action}
+            label={action.label}
             size="small"
-            onClick={() => setInput(action)}
+            onClick={() => setInput(action.value)}
             sx={{
               cursor: "pointer",
               "&:hover": { bgcolor: "primary.light", color: "white" },

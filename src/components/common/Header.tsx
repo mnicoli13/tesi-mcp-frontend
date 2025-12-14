@@ -10,17 +10,11 @@ export default function Header() {
         </Typography>
 
         <Stack direction="row" spacing={2}>
-          <Button color="inherit" component={RouterLink} to="/">
-            Home
+          <Button color="inherit" component={RouterLink} to="/interview">
+            Interview
           </Button>
           <Button color="inherit" component={RouterLink} to="/chat">
             Chat
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/about">
-            About
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/esse3">
-            Esse3
           </Button>
         </Stack>
       </Toolbar>

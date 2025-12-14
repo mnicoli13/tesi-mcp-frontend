@@ -8,7 +8,7 @@ import {
   Paper,
 } from "@mui/material";
 import { WorkOutline, TrendingUp } from "@mui/icons-material";
-import { SuggestCareerOutput } from "../../types/mcp";
+import { SuggestCareerOutput } from "../../../types/mcp";
 
 interface CareerRolesCardProps {
   careerData: SuggestCareerOutput;

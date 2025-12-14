@@ -7,9 +7,16 @@ import { streamText } from "ai";
 import { v4 as uuidv4 } from "uuid";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { validateAndEnsureToken } from "../../utils/authValidation";
+import { SYSTEM_WELCOME_MESSAGE } from "../../utils/systemPrompt";
 
 export function useChat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: uuidv4(),
+      role: "assistant" as RoleType,
+      content: SYSTEM_WELCOME_MESSAGE,
+    },
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingText, setIsLoadingText] = useState(false);
   const [isToolsRunning, setIsToolsRunning] = useState(false);

@@ -29,8 +29,8 @@ export default function ChatMessages({
     <Box
       sx={{
         flex: 1,
-        overflow: "auto",
         p: 3,
+        pb: 0.5,
         "&::-webkit-scrollbar": { width: "8px" },
         "&::-webkit-scrollbar-track": { bgcolor: "grey.100" },
         "&::-webkit-scrollbar-thumb": {
@@ -101,7 +101,7 @@ export default function ChatMessages({
           </Box>
         )}
 
-        <div ref={messagesEndRef} />
+        <Box ref={messagesEndRef} sx={{ mt: "0 !important" }} />
       </Stack>
     </Box>
   );
