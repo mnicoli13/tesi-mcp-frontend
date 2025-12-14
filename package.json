@@ -28,7 +28,10 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.66.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.4",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
     "uuid": "^13.0.0",
     "yup": "^1.7.1"
   },

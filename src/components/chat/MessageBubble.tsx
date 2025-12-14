@@ -1,6 +1,8 @@
 import { Box, Paper, Avatar, Typography } from "@mui/material";
 import { SmartToy, Person } from "@mui/icons-material";
 import { RoleType } from "../../types/message";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type MessageBubbleProps = {
   content?: string;
@@ -77,9 +79,159 @@ export default function MessageBubble({
               borderBottomRightRadius: isUser ? 0 : 2,
             }}
           >
-            <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
-              {content}
-            </Typography>
+            <Box
+              sx={{
+                lineHeight: 1.6,
+                wordBreak: "break-word",
+                "& p": { margin: "0.5em 0" },
+                "& p:first-of-type": { marginTop: 0 },
+                "& p:last-of-type": { marginBottom: 0 },
+                "& h1": {
+                  fontSize: "1.75em",
+                  marginTop: "0.8em",
+                  marginBottom: "0.5em",
+                  fontWeight: 700,
+                  borderBottom: `2px solid ${
+                    isUser ? "rgba(255, 255, 255, 0.3)" : "#e0e0e0"
+                  }`,
+                  paddingBottom: "0.3em",
+                },
+                "& h2": {
+                  fontSize: "1.5em",
+                  marginTop: "0.8em",
+                  marginBottom: "0.5em",
+                  fontWeight: 600,
+                  borderBottom: `1px solid ${
+                    isUser ? "rgba(255, 255, 255, 0.2)" : "#e0e0e0"
+                  }`,
+                  paddingBottom: "0.3em",
+                },
+                "& h3": {
+                  fontSize: "1.25em",
+                  marginTop: "0.8em",
+                  marginBottom: "0.5em",
+                  fontWeight: 600,
+                },
+                "& h4, & h5, & h6": {
+                  marginTop: "0.8em",
+                  marginBottom: "0.5em",
+                  fontWeight: 600,
+                },
+                "& h1:first-of-type, & h2:first-of-type, & h3:first-of-type": {
+                  marginTop: 0,
+                },
+                "& ul, & ol": {
+                  marginLeft: "1.5em",
+                  marginTop: "0.5em",
+                  marginBottom: "0.5em",
+                  paddingLeft: "0.5em",
+                },
+                "& li": {
+                  marginBottom: "0.25em",
+                  lineHeight: 1.6,
+                },
+                "& li > p": {
+                  margin: "0.25em 0",
+                },
+                "& code": {
+                  backgroundColor: isUser
+                    ? "rgba(0, 0, 0, 0.2)"
+                    : "rgba(0, 0, 0, 0.05)",
+                  padding: "0.2em 0.4em",
+                  borderRadius: "3px",
+                  fontSize: "0.9em",
+                  fontFamily: "monospace",
+                  whiteSpace: "pre-wrap",
+                  wordBreak: "break-word",
+                },
+                "& pre": {
+                  backgroundColor: isUser
+                    ? "rgba(0, 0, 0, 0.2)"
+                    : "rgba(0, 0, 0, 0.05)",
+                  padding: "1em",
+                  borderRadius: "5px",
+                  overflow: "auto",
+                  marginTop: "0.5em",
+                  marginBottom: "0.5em",
+                },
+                "& pre code": {
+                  backgroundColor: "transparent",
+                  padding: 0,
+                  display: "block",
+                  whiteSpace: "pre",
+                },
+                "& blockquote": {
+                  borderLeft: `4px solid ${
+                    isUser ? "rgba(255, 255, 255, 0.5)" : "#ddd"
+                  }`,
+                  paddingLeft: "1em",
+                  marginLeft: 0,
+                  marginRight: 0,
+                  marginTop: "0.5em",
+                  marginBottom: "0.5em",
+                  fontStyle: "italic",
+                  color: isUser
+                    ? "rgba(255, 255, 255, 0.85)"
+                    : "text.secondary",
+                },
+                "& a": {
+                  color: isUser ? "rgba(255, 255, 255, 0.9)" : "primary.main",
+                  textDecoration: "underline",
+                  "&:hover": {
+                    opacity: 0.8,
+                  },
+                },
+                "& hr": {
+                  border: "none",
+                  borderTop: `2px solid ${
+                    isUser ? "rgba(255, 255, 255, 0.3)" : "#e0e0e0"
+                  }`,
+                  margin: "1em 0",
+                },
+                "& table": {
+                  borderCollapse: "collapse",
+                  width: "100%",
+                  marginTop: "0.5em",
+                  marginBottom: "0.5em",
+                  fontSize: "0.9em",
+                },
+                "& th, & td": {
+                  border: `1px solid ${
+                    isUser ? "rgba(255, 255, 255, 0.3)" : "#ddd"
+                  }`,
+                  padding: "0.5em 0.75em",
+                  textAlign: "left",
+                },
+                "& th": {
+                  backgroundColor: isUser
+                    ? "rgba(0, 0, 0, 0.2)"
+                    : "rgba(0, 0, 0, 0.05)",
+                  fontWeight: 600,
+                },
+                "& tr:nth-of-type(even)": {
+                  backgroundColor: isUser
+                    ? "rgba(0, 0, 0, 0.1)"
+                    : "rgba(0, 0, 0, 0.02)",
+                },
+                "& img": {
+                  maxWidth: "100%",
+                  height: "auto",
+                  borderRadius: "4px",
+                  marginTop: "0.5em",
+                  marginBottom: "0.5em",
+                },
+                "& strong": {
+                  fontWeight: 600,
+                },
+                "& em": {
+                  fontStyle: "italic",
+                },
+              }}
+            >
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {content || ""}
+              </ReactMarkdown>
+            </Box>
           </Paper>
         </Box>
 
