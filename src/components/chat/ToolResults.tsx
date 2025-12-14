@@ -2,6 +2,7 @@ import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import EuropassCVCard from "./EuropassCVCard";
 import SkillsAnalysisCard from "./SkillsAnalysisCard";
 import CareerRolesCard from "./CareerRolesCard";
+import JobResultsCard from "./JobResultsCard";
 import { ToolResult } from "../../types/message";
 import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
 
@@ -61,6 +62,19 @@ export const ToolResults = ({
                 }
               } catch (error) {
                 console.error("Failed to parse career data:", error);
+              }
+            }
+
+            // Check if this is a Job Search result
+            if (toolResult.name === "find_jobs") {
+              try {
+                const content = toolResult.result?.content;
+                if (Array.isArray(content) && content[0]?.text) {
+                  const jobsData = JSON.parse(content[0].text);
+                  return <JobResultsCard key={j} jobsData={jobsData} />;
+                }
+              } catch (error) {
+                console.error("Failed to parse job data:", error);
               }
             }
 
