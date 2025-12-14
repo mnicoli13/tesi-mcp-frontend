@@ -22,8 +22,7 @@ export function useChat() {
   // });
 
   const openrouter = createOpenRouter({
-    apiKey:
-      "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",
+    apiKey: import.meta.env.VITE_OPENROUTER_API_KEY,
   });
 
   async function sendMessage(input: string) {
@@ -103,7 +102,7 @@ export function useChat() {
       setMessages((prev) => [...prev, aiMessage]);
       // STEP 4: CHIAMATA AL MODELLO
       const result = streamText({
-        model: openrouter.chat("z-ai/glm-4.5-air:free"),
+        model: openrouter.chat(import.meta.env.VITE_OPENROUTER_MODEL),
         messages: messagesWithSystem,
         tools,
         onChunk({ chunk }) {
