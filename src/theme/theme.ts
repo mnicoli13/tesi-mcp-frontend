@@ -1,4 +1,4 @@
-import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from "@mui/material/styles";
 
 /**
  * Tema personalizzato per Career Coach MCP
@@ -7,117 +7,117 @@ import { createTheme, ThemeOptions } from '@mui/material/styles';
 
 const themeOptions: ThemeOptions = {
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#1976d2', // Blu professionale
-      light: '#63a4ff',
-      dark: '#004ba0',
-      contrastText: '#ffffff',
+      main: "#1976d2", // Blu professionale
+      light: "#63a4ff",
+      dark: "#004ba0",
+      contrastText: "#ffffff",
     },
     secondary: {
-      main: '#00897b', // Teal per crescita/opportunità
-      light: '#4db6ac',
-      dark: '#00695c',
-      contrastText: '#ffffff',
+      main: "#00897b", // Teal per crescita/opportunità
+      light: "#4db6ac",
+      dark: "#00695c",
+      contrastText: "#ffffff",
     },
     error: {
-      main: '#d32f2f',
-      light: '#ef5350',
-      dark: '#c62828',
+      main: "#d32f2f",
+      light: "#ef5350",
+      dark: "#c62828",
     },
     warning: {
-      main: '#f57c00', // Arancione sobrio
-      light: '#ffa726',
-      dark: '#ef6c00',
+      main: "#f57c00", // Arancione sobrio
+      light: "#ffa726",
+      dark: "#ef6c00",
     },
     success: {
-      main: '#388e3c',
-      light: '#66bb6a',
-      dark: '#2e7d32',
+      main: "#388e3c",
+      light: "#66bb6a",
+      dark: "#2e7d32",
     },
     info: {
-      main: '#0288d1',
-      light: '#03a9f4',
-      dark: '#01579b',
+      main: "#0288d1",
+      light: "#03a9f4",
+      dark: "#01579b",
     },
     background: {
-      default: '#fafafa',
-      paper: '#ffffff',
+      default: "#fafafa",
+      paper: "#ffffff",
     },
     text: {
-      primary: '#212121',
-      secondary: '#757575',
-      disabled: '#bdbdbd',
+      primary: "#212121",
+      secondary: "#757575",
+      disabled: "#bdbdbd",
     },
-    divider: '#e0e0e0',
+    divider: "#e0e0e0",
   },
   typography: {
     fontFamily: [
-      'Roboto',
-      'Inter',
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "Roboto",
+      "Inter",
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Arial',
-      'sans-serif',
-    ].join(','),
+      "Arial",
+      "sans-serif",
+    ].join(","),
     h1: {
-      fontSize: '2.5rem',
+      fontSize: "2.5rem",
       fontWeight: 700,
       lineHeight: 1.2,
-      letterSpacing: '-0.01562em',
+      letterSpacing: "-0.01562em",
     },
     h2: {
-      fontSize: '2rem',
+      fontSize: "2rem",
       fontWeight: 600,
       lineHeight: 1.3,
-      letterSpacing: '-0.00833em',
+      letterSpacing: "-0.00833em",
     },
     h3: {
-      fontSize: '1.75rem',
+      fontSize: "1.75rem",
       fontWeight: 600,
       lineHeight: 1.35,
     },
     h4: {
-      fontSize: '1.5rem',
+      fontSize: "1.5rem",
       fontWeight: 600,
       lineHeight: 1.4,
     },
     h5: {
-      fontSize: '1.25rem',
+      fontSize: "1.25rem",
       fontWeight: 600,
       lineHeight: 1.45,
     },
     h6: {
-      fontSize: '1rem',
+      fontSize: "1rem",
       fontWeight: 600,
       lineHeight: 1.5,
     },
     subtitle1: {
-      fontSize: '1rem',
+      fontSize: "1rem",
       fontWeight: 500,
       lineHeight: 1.75,
     },
     subtitle2: {
-      fontSize: '0.875rem',
+      fontSize: "0.875rem",
       fontWeight: 500,
       lineHeight: 1.57,
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: "1rem",
       fontWeight: 400,
       lineHeight: 1.5,
     },
     body2: {
-      fontSize: '0.875rem',
+      fontSize: "0.875rem",
       fontWeight: 400,
       lineHeight: 1.43,
     },
     button: {
-      fontSize: '0.875rem',
+      fontSize: "0.875rem",
       fontWeight: 500,
-      textTransform: 'none', // No UPPERCASE buttons
-      letterSpacing: '0.02857em',
+      textTransform: "none", // No UPPERCASE buttons
+      letterSpacing: "0.02857em",
     },
   },
   shape: {
@@ -129,22 +129,22 @@ const themeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: 8,
-          padding: '10px 24px',
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: 'none',
+          padding: "10px 24px",
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "none",
           },
         },
         sizeLarge: {
-          padding: '12px 32px',
-          fontSize: '1rem',
+          padding: "12px 32px",
+          fontSize: "1rem",
         },
         sizeMedium: {
-          padding: '10px 24px',
+          padding: "10px 24px",
         },
         sizeSmall: {
-          padding: '6px 16px',
-          fontSize: '0.8125rem',
+          padding: "6px 16px",
+          fontSize: "0.8125rem",
         },
       },
     },
@@ -152,10 +152,10 @@ const themeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
-          transition: 'box-shadow 0.3s ease-in-out',
-          '&:hover': {
-            boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.12)',
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.08)",
+          transition: "box-shadow 0.3s ease-in-out",
+          "&:hover": {
+            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.12)",
           },
         },
       },
@@ -163,13 +163,13 @@ const themeOptions: ThemeOptions = {
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& .MuiOutlinedInput-root': {
+          "& .MuiOutlinedInput-root": {
             borderRadius: 8,
           },
         },
       },
       defaultProps: {
-        variant: 'outlined',
+        variant: "outlined",
       },
     },
     MuiPaper: {
@@ -178,13 +178,13 @@ const themeOptions: ThemeOptions = {
           borderRadius: 12,
         },
         elevation1: {
-          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.06)',
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.06)",
         },
         elevation2: {
-          boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.08)",
         },
         elevation3: {
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
         },
       },
     },
@@ -207,7 +207,7 @@ const themeOptions: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.08)",
         },
       },
     },
@@ -230,10 +230,10 @@ const themeOptions: ThemeOptions = {
       leavingScreen: 195,
     },
     easing: {
-      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
-      easeOut: 'cubic-bezier(0.0, 0, 0.2, 1)',
-      easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
-      sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
+      easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
+      easeOut: "cubic-bezier(0.0, 0, 0.2, 1)",
+      easeIn: "cubic-bezier(0.4, 0, 1, 1)",
+      sharp: "cubic-bezier(0.4, 0, 0.6, 1)",
     },
   },
 };

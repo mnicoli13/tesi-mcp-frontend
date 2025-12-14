@@ -1,6 +1,6 @@
 import { Box, Paper, Avatar, Typography } from "@mui/material";
 import { SmartToy, Person } from "@mui/icons-material";
-import { RoleType } from "../../types/message";
+import { RoleType } from "../../../types/message";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -92,7 +92,7 @@ export default function MessageBubble({
                   marginBottom: "0.5em",
                   fontWeight: 700,
                   borderBottom: `2px solid ${
-                    isUser ? "rgba(255, 255, 255, 0.3)" : "#e0e0e0"
+                    isUser ? "rgba(255, 255, 255, 0.3)" : "divider"
                   }`,
                   paddingBottom: "0.3em",
                 },
@@ -102,7 +102,7 @@ export default function MessageBubble({
                   marginBottom: "0.5em",
                   fontWeight: 600,
                   borderBottom: `1px solid ${
-                    isUser ? "rgba(255, 255, 255, 0.2)" : "#e0e0e0"
+                    isUser ? "rgba(255, 255, 255, 0.2)" : "divider"
                   }`,
                   paddingBottom: "0.3em",
                 },
@@ -184,7 +184,7 @@ export default function MessageBubble({
                 "& hr": {
                   border: "none",
                   borderTop: `2px solid ${
-                    isUser ? "rgba(255, 255, 255, 0.3)" : "#e0e0e0"
+                    isUser ? "rgba(255, 255, 255, 0.3)" : "divider"
                   }`,
                   margin: "1em 0",
                 },
@@ -237,7 +237,7 @@ export default function MessageBubble({
 
         {isUser && (
           <Avatar
-            sx={{ bgcolor: "secondary.main", width: 36, height: 36, mt: 1 }}
+            sx={{ bgcolor: "primary.main", width: 36, height: 36, mt: 1 }}
           >
             <Person sx={{ fontSize: 20 }} />
           </Avatar>

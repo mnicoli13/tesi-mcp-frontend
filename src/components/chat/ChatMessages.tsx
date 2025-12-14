@@ -1,11 +1,12 @@
 import { Box, Stack, Fade, Avatar } from "@mui/material";
-import MessageBubble from "./MessageBubble";
+import MessageBubble from "./messages/MessageBubble";
 import { Message } from "../../types/message";
-import { ToolResults } from "./ToolResults";
-import { LoadingState } from "./LoadingState";
+import { ToolResults } from "./messages/ToolResults";
+import { LoadingState } from "./messages/LoadingState";
 import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
 import { SmartToy } from "@mui/icons-material";
 import { useEffect } from "react";
+import MessageError from "./messages/MessageError";
 
 type ChatMessagesProps = {
   messages: Message[];
@@ -50,6 +51,8 @@ export default function ChatMessages({
               />
 
               <ToolResults toolResults={m.toolResults} />
+
+              {m.error && <MessageError content={m.error} />}
             </Stack>
           </Fade>
         ))}

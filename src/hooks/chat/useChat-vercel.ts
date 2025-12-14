@@ -96,16 +96,17 @@ export function useChat() {
 
     const tools = await getTools();
 
-    try {
-      let liveText = "";
-      let reasoningText = "";
+    let liveText = "";
+    let reasoningText = "";
 
-      const aiMessage = {
-        id: uuidv4(),
-        role: "assistant" as RoleType,
-        content: "",
-        reasoning: "",
-      };
+    const aiMessage = {
+      id: uuidv4(),
+      role: "assistant" as RoleType,
+      content: "",
+      reasoning: "",
+    };
+
+    try {
       setMessages((prev) => [...prev, aiMessage]);
       // STEP 4: CHIAMATA AL MODELLO
       const result = streamText({
@@ -144,6 +145,22 @@ export function useChat() {
             }
           }
         },
+        onError({ error }) {
+          console.log("Error: ", error);
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === aiMessage.id
+                ? {
+                    ...msg,
+                    error:
+                      error instanceof Error
+                        ? error.message
+                        : "Failed to get AI response",
+                  }
+                : msg
+            )
+          );
+        },
       });
 
       const { textStream } = result;
@@ -161,44 +178,22 @@ export function useChat() {
 
       // STEP 5: GESTIONE RISULTATI TOOLS
       let toolResultsData: any[] = [];
-      try {
-        console.log("⏳ Waiting for tool results...");
-        const resolvedToolResults = await result.toolResults;
 
-        // Process tool results if any
-        if (resolvedToolResults?.length) {
-          console.log(
-            `✅ Tool results received: ${resolvedToolResults.length} tools executed`
-          );
+      console.log("⏳ Waiting for tool results...");
+      const resolvedToolResults = await result.toolResults;
 
-          toolResultsData = resolvedToolResults.map((t) => ({
-            name: t.toolName,
-            result: t.output,
-          }));
+      // Process tool results if any
+      if (resolvedToolResults?.length) {
+        console.log(
+          `✅ Tool results received: ${resolvedToolResults.length} tools executed`
+        );
 
-          // Inserisco i tool results nel messaggio
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === aiMessage.id
-                ? { ...msg, toolResults: toolResultsData }
-                : msg
-            )
-          );
+        toolResultsData = resolvedToolResults.map((t) => ({
+          name: t.toolName,
+          result: t.output,
+        }));
 
-          console.log("✅ Tools processing completed");
-        } else {
-          console.log("ℹ️ No tool results to process");
-        }
-      } catch (mcpError) {
-        console.error("❌ Errore MCP:", mcpError);
-
-        toolResultsData.push({
-          name: "MCP error",
-          error:
-            mcpError instanceof Error ? mcpError.message : "Errore tool MCP",
-        });
-
-        // Inserisco l'errore nel messaggio
+        // Inserisco i tool results nel messaggio
         setMessages((prev) =>
           prev.map((msg) =>
             msg.id === aiMessage.id
@@ -207,23 +202,28 @@ export function useChat() {
           )
         );
 
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        console.log("✅ Tools processing completed");
+      } else {
+        console.log("ℹ️ No tool results to process");
       }
-
-      return liveText;
     } catch (error) {
-      console.log("Error in genAIResponse:");
+      console.log("Error in genAIResponse: ");
       console.error("Error in genAIResponse:", error);
 
-      if (error instanceof Error && error.message.includes("rate limit")) {
-        return { error: "Rate limit exceeded. Please try again in a moment." };
-      }
-      return {
-        error:
-          error instanceof Error ? error.message : "Failed to get AI response",
-      };
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === aiMessage.id && !msg.error
+            ? {
+                ...msg,
+                error:
+                  error instanceof Error
+                    ? error.message
+                    : "Failed to get AI response",
+              }
+            : msg
+        )
+      );
     } finally {
-      console.log("finally");
       setIsLoading(false);
       setIsLoadingText(false);
       setIsToolsRunning(false);

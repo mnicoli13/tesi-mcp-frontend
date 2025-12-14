@@ -9,6 +9,7 @@ export interface Message {
   content: string;
   reasoning?: string;
   toolResults?: ToolResult[];
+  error?: string;
 }
 
 export type RoleType = "user" | "assistant";
