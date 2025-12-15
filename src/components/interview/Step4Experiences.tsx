@@ -14,29 +14,44 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SchoolIcon from "@mui/icons-material/School";
 import CodeIcon from "@mui/icons-material/Code";
 import WorkIcon from "@mui/icons-material/Work";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ExperiencesData, Project, Internship } from "../../types/interview";
+import {
+  ExperiencesData,
+  Project,
+  Internship,
+  WorkExperience,
+  Education,
+} from "../../types/interview";
 import {
   projectSchema,
   internshipSchema,
+  workExperienceSchema,
+  educationSchema,
 } from "../../schemas/interviewSchemas";
-import {
-  FRAMEWORKS_AND_TOOLS,
-  PROGRAMMING_LANGUAGES,
-} from "../../constants/interviewConstants";
 import { v4 as uuidv4 } from "uuid";
 import AddProjectDialog from "./dialog/AddProjectDialog";
 import AddStageDialog from "./dialog/AddStageDialog";
+import AddWorkExperienceDialog from "./dialog/AddWorkExperienceDialog";
+import AddEducationDialog from "./dialog/AddEducationDialog";
 import ProjectCard from "./card/ProjectCard";
 import StageCard from "./card/StageCard";
+import WorkExperienceCard from "./card/WorkExperienceCard";
+import EducationCard from "./card/EducationCard";
 
 interface Step4ExperiencesProps {
   initialData?: ExperiencesData;
   onSave: (data: ExperiencesData) => void;
 }
 
-export type DialogType = "university" | "personal" | "internship" | null;
+export type DialogType =
+  | "university"
+  | "personal"
+  | "internship"
+  | "workExperience"
+  | "education"
+  | null;
 
 const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
   initialData,
@@ -47,14 +62,12 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
       universityProjects: [],
       personalProjects: [],
       internships: [],
+      workExperiences: [],
+      education: [],
     }
   );
 
   const [openDialog, setOpenDialog] = useState<DialogType>(null);
-
-  const allTechnologies = [
-    ...new Set([...PROGRAMMING_LANGUAGES, ...FRAMEWORKS_AND_TOOLS]),
-  ];
 
   // Project form
   const {
@@ -68,7 +81,7 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
     defaultValues: {
       name: "",
       description: "",
-      technologies: [],
+      technologies: undefined,
       githubLink: "",
       type: "university",
     },
@@ -88,8 +101,48 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
       role: "",
       startDate: "",
       endDate: "",
+      description: undefined,
+      technologies: undefined,
+    },
+  });
+
+  // Work Experience form
+  const {
+    handleSubmit: handleSubmitWorkExperience,
+    reset: resetWorkExperience,
+    control: controlWorkExperience,
+    formState: { errors: errorsWorkExperience },
+  } = useForm<Omit<WorkExperience, "id">>({
+    resolver: yupResolver(workExperienceSchema) as any,
+    mode: "onChange",
+    defaultValues: {
+      company: "",
+      role: "",
+      contractType: "permanent" as const,
+      startDate: "",
+      endDate: "",
+      description: undefined,
+      technologies: undefined,
+    },
+  });
+
+  // Education form
+  const {
+    handleSubmit: handleSubmitEducation,
+    reset: resetEducation,
+    control: controlEducation,
+    formState: { errors: errorsEducation },
+  } = useForm<Omit<Education, "id">>({
+    resolver: yupResolver(educationSchema) as any,
+    mode: "onChange",
+    defaultValues: {
+      institution: "",
+      degree: "",
+      fieldOfStudy: "",
+      startYear: new Date().getFullYear(),
+      endYear: undefined,
+      grade: "",
       description: "",
-      technologies: [],
     },
   });
 
@@ -167,6 +220,62 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
     onSave(updatedData);
   };
 
+  const onSubmitWorkExperience = (values: Omit<WorkExperience, "id">) => {
+    const newWorkExperience: WorkExperience = {
+      id: uuidv4(),
+      ...values,
+    };
+
+    const updatedData = {
+      ...experiencesData,
+      workExperiences: [...experiencesData.workExperiences, newWorkExperience],
+    };
+
+    setExperiencesData(updatedData);
+    onSave(updatedData);
+    resetWorkExperience();
+    setOpenDialog(null);
+  };
+
+  const handleDeleteWorkExperience = (id: string) => {
+    const updatedData = {
+      ...experiencesData,
+      workExperiences: experiencesData.workExperiences.filter(
+        (w) => w.id !== id
+      ),
+    };
+
+    setExperiencesData(updatedData);
+    onSave(updatedData);
+  };
+
+  const onSubmitEducation = (values: Omit<Education, "id">) => {
+    const newEducation: Education = {
+      id: uuidv4(),
+      ...values,
+    };
+
+    const updatedData = {
+      ...experiencesData,
+      education: [...experiencesData.education, newEducation],
+    };
+
+    setExperiencesData(updatedData);
+    onSave(updatedData);
+    resetEducation();
+    setOpenDialog(null);
+  };
+
+  const handleDeleteEducation = (id: string) => {
+    const updatedData = {
+      ...experiencesData,
+      education: experiencesData.education.filter((e) => e.id !== id),
+    };
+
+    setExperiencesData(updatedData);
+    onSave(updatedData);
+  };
+
   return (
     <Box>
       <Typography variant="h5" gutterBottom fontWeight={600}>
@@ -185,8 +294,104 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
       </Alert>
 
       <Stack spacing={2}>
-        {/* Progetti Universitari */}
+        {/* Istruzione */}
         <Accordion defaultExpanded elevation={2}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <SchoolIcon color="primary" />
+              <Typography variant="h6">
+                Istruzione ({experiencesData.education.length})
+              </Typography>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box>
+              {experiencesData.education.map((education) => (
+                <EducationCard
+                  key={education.id}
+                  education={education}
+                  handleDeleteEducation={handleDeleteEducation}
+                />
+              ))}
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenDialog("education")}
+                fullWidth
+              >
+                Aggiungi Percorso Formativo
+              </Button>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Esperienze Professionali */}
+        <Accordion elevation={2}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <BusinessCenterIcon color="primary" />
+              <Typography variant="h6">
+                Esperienze Professionali (
+                {experiencesData.workExperiences.length})
+              </Typography>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box>
+              {experiencesData.workExperiences.map((workExperience) => (
+                <WorkExperienceCard
+                  key={workExperience.id}
+                  workExperience={workExperience}
+                  handleDeleteWorkExperience={handleDeleteWorkExperience}
+                />
+              ))}
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenDialog("workExperience")}
+                fullWidth
+              >
+                Aggiungi Esperienza Professionale
+              </Button>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Tirocini/Stage */}
+        <Accordion elevation={2}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <WorkIcon color="primary" />
+              <Typography variant="h6">
+                Tirocini e Stage ({experiencesData.internships.length})
+              </Typography>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box>
+              {experiencesData.internships.map((internship) => (
+                <StageCard
+                  key={internship.id}
+                  internship={internship}
+                  handleDeleteInternship={handleDeleteInternship}
+                />
+              ))}
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenDialog("internship")}
+                fullWidth
+              >
+                Aggiungi Tirocinio
+              </Button>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+        {/* Progetti Universitari */}
+        <Accordion elevation={2}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Box display="flex" alignItems="center" gap={1}>
               <SchoolIcon color="primary" />
@@ -251,38 +456,6 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
             </Box>
           </AccordionDetails>
         </Accordion>
-
-        {/* Tirocini/Stage */}
-        <Accordion elevation={2}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Box display="flex" alignItems="center" gap={1}>
-              <WorkIcon color="primary" />
-              <Typography variant="h6">
-                Tirocini e Stage ({experiencesData.internships.length})
-              </Typography>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box>
-              {experiencesData.internships.map((internship) => (
-                <StageCard
-                  key={internship.id}
-                  internship={internship}
-                  handleDeleteInternship={handleDeleteInternship}
-                />
-              ))}
-              <Button
-                variant="outlined"
-                color="primary"
-                startIcon={<AddIcon />}
-                onClick={() => setOpenDialog("internship")}
-                fullWidth
-              >
-                Aggiungi Tirocinio
-              </Button>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
       </Stack>
 
       {/* Dialog Aggiungi Progetto */}
@@ -293,7 +466,6 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
         onSubmitProject={onSubmitProject}
         errorsProject={errorsProject}
         controlProject={controlProject}
-        allTechnologies={allTechnologies}
       />
       {/* Dialog Aggiungi Tirocinio */}
       <AddStageDialog
@@ -303,7 +475,24 @@ const Step4Experiences: React.FC<Step4ExperiencesProps> = ({
         onSubmitInternship={onSubmitInternship}
         errorsInternship={errorsInternship}
         controlInternship={controlInternship}
-        allTechnologies={allTechnologies}
+      />
+      {/* Dialog Aggiungi Esperienza Professionale */}
+      <AddWorkExperienceDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        handleSubmitWorkExperience={handleSubmitWorkExperience}
+        onSubmitWorkExperience={onSubmitWorkExperience}
+        errorsWorkExperience={errorsWorkExperience}
+        controlWorkExperience={controlWorkExperience}
+      />
+      {/* Dialog Aggiungi Istruzione */}
+      <AddEducationDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        handleSubmitEducation={handleSubmitEducation}
+        onSubmitEducation={onSubmitEducation}
+        errorsEducation={errorsEducation}
+        controlEducation={controlEducation}
       />
     </Box>
   );

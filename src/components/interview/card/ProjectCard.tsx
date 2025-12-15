@@ -47,17 +47,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 </Typography>
               </Box>
             )}
-            <Stack direction="row" spacing={0.5} flexWrap="wrap" mt={1}>
-              {project.technologies.map((tech) => (
-                <Chip
-                  key={tech}
-                  label={tech}
-                  size="small"
-                  variant="outlined"
-                  color="primary"
-                />
-              ))}
-            </Stack>
+            {project.technologies && project.technologies.length > 0 && (
+              <Stack direction="row" spacing={0.5} flexWrap="wrap" mt={1}>
+                {project.technologies.map((tech) => (
+                  <Chip
+                    key={tech}
+                    label={tech}
+                    size="small"
+                    variant="outlined"
+                    color="secondary"
+                  />
+                ))}
+              </Stack>
+            )}
           </Box>
           <IconButton
             aria-label="delete"

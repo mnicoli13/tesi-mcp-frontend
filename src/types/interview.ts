@@ -69,7 +69,7 @@ export interface Project {
   id?: string;
   name: string;
   description: string;
-  technologies: string[];
+  technologies?: string[];
   githubLink?: string;
   type: "university" | "personal";
 }
@@ -80,28 +80,49 @@ export interface Internship {
   role: string;
   startDate: string;
   endDate: string;
-  description: string;
-  technologies: string[];
+  description?: string;
+  technologies?: string[];
+}
+
+export interface WorkExperience {
+  id?: string;
+  company: string;
+  role: string;
+  contractType: "permanent" | "fixed-term" | "freelance";
+  startDate: string;
+  endDate: string; // or "present" for current jobs
+  description?: string;
+  technologies?: string[];
+}
+
+export interface Education {
+  id?: string;
+  institution: string;
+  degree: string;
+  fieldOfStudy: string;
+  startYear: number;
+  endYear?: number; // null if ongoing
+  grade?: string;
+  description?: string;
 }
 
 export interface ExperiencesData {
   universityProjects: Project[];
   personalProjects: Project[];
   internships: Internship[];
+  workExperiences: WorkExperience[];
+  education: Education[];
 }
 
-// Step 5 - Skills Tecniche e Linguistiche
-export interface ProgrammingLanguageSkill {
+// Step 5 - Lingue e Patenti
+export interface SpokenLanguage {
   name: string;
-  level: SkillLevel;
+  level: EnglishLevel;
 }
 
 export interface SkillsData {
-  programmingLanguages: ProgrammingLanguageSkill[];
-  frameworks: string[];
-  databases: string[];
-  devOps: string[];
-  englishLevel: EnglishLevel;
+  languages: SpokenLanguage[];
+  driverLicenses: string[];
   inferredFromProfile: boolean; // Se le skill sono state inferite dal tool
 }
 
@@ -130,7 +151,7 @@ export const INTERVIEW_STEP_LABELS = [
   "Esami e Voti",
   "Interessi Professionali",
   "Esperienze Pratiche",
-  "Skills Tecniche",
+  "Lingue e Patenti",
 ];
 
 // Stato iniziale dell'intervista

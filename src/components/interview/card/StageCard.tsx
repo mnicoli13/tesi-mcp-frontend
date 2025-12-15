@@ -39,20 +39,24 @@ const StageCard: React.FC<StageCardProps> = ({
               {new Date(internship.startDate).toLocaleDateString("it-IT")} -{" "}
               {new Date(internship.endDate).toLocaleDateString("it-IT")}
             </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              {internship.description}
-            </Typography>
-            <Stack direction="row" spacing={0.5} flexWrap="wrap" mt={1}>
-              {internship.technologies.map((tech) => (
-                <Chip
-                  key={tech}
-                  label={tech}
-                  size="small"
-                  variant="outlined"
-                  color="secondary"
-                />
-              ))}
-            </Stack>
+            {internship.description && (
+              <Typography variant="body2" color="text.secondary" paragraph>
+                {internship.description}
+              </Typography>
+            )}
+            {internship.technologies && internship.technologies.length > 0 && (
+              <Stack direction="row" spacing={0.5} flexWrap="wrap" mt={1}>
+                {internship.technologies.map((tech) => (
+                  <Chip
+                    key={tech}
+                    label={tech}
+                    size="small"
+                    variant="outlined"
+                    color="secondary"
+                  />
+                ))}
+              </Stack>
+            )}
           </Box>
           <IconButton
             aria-label="delete"

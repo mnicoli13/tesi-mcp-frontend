@@ -6,8 +6,6 @@ import {
   DialogContent,
   Grid,
   TextField,
-  Autocomplete,
-  Chip,
   FormLabel,
   Stack,
 } from "@mui/material";
@@ -26,7 +24,6 @@ interface AddProjectDialogProps {
   onSubmitProject: (data: Omit<Project, "id">) => void;
   errorsProject: any;
   controlProject: any;
-  allTechnologies: string[];
 }
 
 const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
@@ -36,7 +33,6 @@ const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
   onSubmitProject,
   errorsProject,
   controlProject,
-  allTechnologies,
 }) => {
   return (
     <Dialog
@@ -74,51 +70,16 @@ const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
               <Controller
                 name="description"
                 control={controlProject}
-                render={() => (
+                render={({ field }) => (
                   <Stack spacing={1}>
                     <FormLabel>Descrizione *</FormLabel>
                     <TextField
+                      {...field}
                       fullWidth
                       multiline
                       rows={3}
                       error={!!errorsProject.description}
                       helperText={errorsProject.description?.message}
-                    />
-                  </Stack>
-                )}
-              />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <Controller
-                name="technologies"
-                control={controlProject}
-                render={({ field }) => (
-                  <Stack spacing={1}>
-                    <FormLabel>Tecnologie Utilizzate *</FormLabel>
-                    <Autocomplete
-                      {...field}
-                      multiple
-                      options={allTechnologies}
-                      value={field.value}
-                      onChange={(_, newValue) => field.onChange(newValue)}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          error={!!errorsProject.technologies}
-                          helperText={errorsProject.technologies?.message}
-                        />
-                      )}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            label={option}
-                            {...getTagProps({ index })}
-                            size="small"
-                            key={option}
-                          />
-                        ))
-                      }
-                      freeSolo
                     />
                   </Stack>
                 )}

@@ -273,10 +273,10 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
               <Stack spacing={1}>
                 <FormLabel>Anno di Laurea *</FormLabel>
                 <TextField
-                  name="courseOfStudy"
-                  defaultValue={formValues.courseOfStudy}
+                  name="graduationYear"
+                  defaultValue={formValues.graduationYear}
                   fullWidth
-                  error={!!errors.courseOfStudy}
+                  error={!!errors.graduationYear}
                   variant="outlined"
                 />
               </Stack>

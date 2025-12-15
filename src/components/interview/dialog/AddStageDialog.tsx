@@ -6,8 +6,6 @@ import {
   DialogContent,
   Grid,
   TextField,
-  Autocomplete,
-  Chip,
   Stack,
   FormLabel,
 } from "@mui/material";
@@ -26,7 +24,6 @@ interface AddStageDialogProps {
   onSubmitInternship: (data: Omit<Internship, "id">) => void;
   errorsInternship: any;
   controlInternship: any;
-  allTechnologies: string[];
 }
 
 const AddStageDialog: React.FC<AddStageDialogProps> = ({
@@ -36,7 +33,6 @@ const AddStageDialog: React.FC<AddStageDialogProps> = ({
   onSubmitInternship,
   errorsInternship,
   controlInternship,
-  allTechnologies,
 }) => {
   return (
     <Dialog
@@ -125,52 +121,16 @@ const AddStageDialog: React.FC<AddStageDialogProps> = ({
               <Controller
                 name="description"
                 control={controlInternship}
-                render={() => (
+                render={({ field }) => (
                   <Stack spacing={1}>
-                    <FormLabel>Descrizione Attività *</FormLabel>
+                    <FormLabel>Descrizione Attività (opzionale)</FormLabel>
                     <TextField
+                      {...field}
                       fullWidth
                       multiline
                       rows={3}
                       error={!!errorsInternship.description}
                       helperText={errorsInternship.description?.message}
-                    />
-                  </Stack>
-                )}
-              />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <Controller
-                name="technologies"
-                control={controlInternship}
-                render={({ field }) => (
-                  <Stack spacing={1}>
-                    <FormLabel>Tecnologie Utilizzate *</FormLabel>
-                    <Autocomplete
-                      {...field}
-                      multiple
-                      options={allTechnologies}
-                      value={field.value}
-                      onChange={(_, newValue) => field.onChange(newValue)}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Tecnologie Utilizzate *"
-                          error={!!errorsInternship.technologies}
-                          helperText={errorsInternship.technologies?.message}
-                        />
-                      )}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            label={option}
-                            {...getTagProps({ index })}
-                            size="small"
-                            key={option}
-                          />
-                        ))
-                      }
-                      freeSolo
                     />
                   </Stack>
                 )}

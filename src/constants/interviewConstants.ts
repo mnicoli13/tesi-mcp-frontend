@@ -279,6 +279,44 @@ export const COMPANY_TYPE_LABELS = {
   sme: "PMI (Piccola/Media Impresa)",
 };
 
+// Lingue parlate comuni
+export const SPOKEN_LANGUAGES = [
+  "Italiano",
+  "Inglese",
+  "Francese",
+  "Spagnolo",
+  "Tedesco",
+  "Portoghese",
+  "Cinese",
+  "Giapponese",
+  "Russo",
+  "Arabo",
+  "Olandese",
+  "Polacco",
+  "Svedese",
+  "Norvegese",
+  "Danese",
+  "Finlandese",
+  "Greco",
+  "Turco",
+  "Coreano",
+  "Hindi",
+];
+
+// Patenti di guida
+export const DRIVER_LICENSES = [
+  "AM (Ciclomotori)",
+  "A1 (Motocicli leggeri)",
+  "A2 (Motocicli medi)",
+  "A (Motocicli)",
+  "B (Autoveicoli)",
+  "C (Automezzi pesanti)",
+  "D (Autobus)",
+  "BE (Autoveicoli con rimorchio)",
+  "CE (Automezzi pesanti con rimorchio)",
+  "DE (Autobus con rimorchio)",
+];
+
 // Label per livello inglese
 export const ENGLISH_LEVEL_LABELS = {
   A1: "A1 - Principiante",
@@ -289,6 +327,9 @@ export const ENGLISH_LEVEL_LABELS = {
   C2: "C2 - Padronanza",
   native: "Madrelingua",
 };
+
+// Alias generico per livelli linguistici (usato per tutte le lingue)
+export const LANGUAGE_LEVEL_LABELS = ENGLISH_LEVEL_LABELS;
 
 // Label per livello skill
 export const SKILL_LEVEL_LABELS = {
