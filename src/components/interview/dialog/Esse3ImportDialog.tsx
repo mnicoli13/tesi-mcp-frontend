@@ -38,7 +38,6 @@ const Esse3ImportDialog: React.FC<Esse3ImportDialogProps> = ({
     showPassword,
     togglePassword,
     onSubmit,
-    errorMessage,
   } = useEsse3Import({ onSuccess: onImportSuccess, onClose });
 
   return (
@@ -56,12 +55,6 @@ const Esse3ImportDialog: React.FC<Esse3ImportDialogProps> = ({
             Inserisci le tue credenziali ESSE3 per importare automaticamente i
             tuoi esami e voti. Le credenziali non verranno salvate.
           </Typography>
-
-          {errorMessage && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {errorMessage}
-            </Alert>
-          )}
 
           {/* Username */}
           <Controller

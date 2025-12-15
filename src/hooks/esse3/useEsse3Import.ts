@@ -28,7 +28,6 @@ interface UseEsse3ImportProps {
 
 export function useEsse3Import({ onSuccess, onClose }: UseEsse3ImportProps) {
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { enqueueSnackbar } = useSnackbar();
 
   const form = useForm<Esse3ImportFormValues>({
@@ -43,8 +42,6 @@ export function useEsse3Import({ onSuccess, onClose }: UseEsse3ImportProps) {
   const togglePassword = () => setShowPassword((s) => !s);
 
   const onSubmit = async (values: Esse3ImportFormValues) => {
-    setErrorMessage(null);
-
     try {
       // Cripta la password prima di inviarla al backend
       const encryptedPassword = encryptPassword(values.password);
@@ -55,7 +52,9 @@ export function useEsse3Import({ onSuccess, onClose }: UseEsse3ImportProps) {
       });
 
       if (!response.exams || response.exams.length === 0) {
-        setErrorMessage("Nessun esame trovato nel tuo libretto ESSE3.");
+        enqueueSnackbar("Nessun esame trovato nel tuo libretto ESSE3.", {
+          variant: "error",
+        });
         return;
       }
 
@@ -74,21 +73,78 @@ export function useEsse3Import({ onSuccess, onClose }: UseEsse3ImportProps) {
     } catch (error: any) {
       console.error("Errore durante l'importazione da ESSE3:", error);
 
-      // Gestisci errori specifici
-      if (error.response?.status === 401) {
-        setErrorMessage("Credenziali ESSE3 non valide. Riprova.");
+      // Estrai il messaggio dal backend (se disponibile)
+      const backendMessage = error.response?.data?.message;
+
+      // Gestisci errori specifici in base allo status HTTP
+      if (error.response?.status === 400) {
+        // Esse3BadRequestException - Richiesta malformata o dati invalidi
+        enqueueSnackbar(
+          backendMessage || "Richiesta non valida. Verifica i dati inseriti.",
+          {
+            variant: "error",
+          }
+        );
+      } else if (error.response?.status === 401) {
+        // Esse3UnauthorizedException - Credenziali ESSE3 non valide
+        enqueueSnackbar(
+          backendMessage ||
+            "Credenziali ESSE3 non valide. Verifica username e password.",
+          {
+            variant: "error",
+          }
+        );
       } else if (error.response?.status === 403) {
-        setErrorMessage("Accesso negato. Verifica le tue credenziali ESSE3.");
+        // Esse3ForbiddenException - Permessi insufficienti o JWT scaduto
+        enqueueSnackbar(
+          backendMessage ||
+            "Accesso negato. Token scaduto o permessi insufficienti.",
+          {
+            variant: "error",
+          }
+        );
+      } else if (error.response?.status === 404) {
+        // Esse3NotFoundException - Università, matricola o libretto non trovati
+        enqueueSnackbar(
+          backendMessage ||
+            "Risorsa non trovata. Verifica la configurazione dell'università.",
+          {
+            variant: "error",
+          }
+        );
       } else if (error.response?.status === 500) {
-        setErrorMessage("Errore del server. Riprova tra qualche minuto.");
+        // Esse3InternalServerException - Errori interni del server ESSE3
+        enqueueSnackbar(
+          backendMessage ||
+            "Il server ESSE3 ha riscontrato un errore interno. Riprova più tardi.",
+          {
+            variant: "error",
+          }
+        );
+      } else if (error.response?.status === 503) {
+        // Esse3ServiceUnavailableException - Server ESSE3 non raggiungibile
+        enqueueSnackbar(
+          backendMessage ||
+            "Il servizio ESSE3 non è al momento raggiungibile. Riprova più tardi.",
+          {
+            variant: "error",
+          }
+        );
       } else if (error.code === "ERR_NETWORK") {
-        setErrorMessage(
-          "Impossibile connettersi al server. Verifica la tua connessione."
+        // Errore di rete (client-side)
+        enqueueSnackbar(
+          "Impossibile connettersi al server. Verifica la tua connessione internet.",
+          {
+            variant: "error",
+          }
         );
       } else {
-        setErrorMessage(
-          error.response?.data?.message ||
-            "Errore durante l'importazione. Riprova."
+        // Errore generico o imprevisto
+        enqueueSnackbar(
+          backendMessage || "Errore durante l'importazione. Riprova.",
+          {
+            variant: "error",
+          }
         );
       }
     }
@@ -99,6 +155,5 @@ export function useEsse3Import({ onSuccess, onClose }: UseEsse3ImportProps) {
     showPassword,
     togglePassword,
     onSubmit,
-    errorMessage,
   };
 }
