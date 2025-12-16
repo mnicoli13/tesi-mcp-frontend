@@ -1,9 +1,9 @@
 import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
-import EuropassCVCard from "./tools/EuropassCVCard";
-import SkillsAnalysisCard from "./tools/SkillsAnalysisCard";
-import CareerRolesCard from "./tools/CareerRolesCard";
-import JobResultsCard from "./tools/JobResultsCard";
-import { ToolResult } from "../../types/message";
+import EuropassCVCard from "../tools/EuropassCVCard";
+import SkillsAnalysisCard from "../tools/SkillsAnalysisCard";
+import CareerRolesCard from "../tools/CareerRolesCard";
+import JobResultsCard from "../tools/JobResultsCard";
+import { ToolResult } from "../../../types/message";
 import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
 
 export const ToolResults = ({
