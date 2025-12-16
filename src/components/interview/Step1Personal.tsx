@@ -9,6 +9,11 @@ import {
   Alert,
   FormLabel,
   Stack,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  CircularProgress,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,15 +23,20 @@ import {
   ITALIAN_UNIVERSITIES,
   DEGREE_TYPE_LABELS,
 } from "../../constants/interviewConstants";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 interface Step1PersonalProps {
   initialData?: PersonalData;
   onSave: (data: PersonalData) => void;
+  handleNext: () => void;
+  isLoading: boolean;
 }
 
 const Step1Personal: React.FC<Step1PersonalProps> = ({
   initialData,
   onSave,
+  handleNext,
+  isLoading,
 }) => {
   const currentYear = new Date().getFullYear();
 
@@ -34,7 +44,8 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
     control,
     watch,
     reset,
-    formState: { errors, isValid, isDirty },
+    setValue,
+    formState: { errors },
   } = useForm<PersonalData>({
     resolver: yupResolver(personalDataSchema),
     mode: "onChange",
@@ -67,224 +78,262 @@ const Step1Personal: React.FC<Step1PersonalProps> = ({
   // Watch all form values
   const formValues = watch();
 
-  // Auto-save on valid changes
-  useEffect(() => {
-    if (isValid && isDirty) {
+  const handleNextStep = async () => {
+    try {
+      await personalDataSchema.validate(formValues);
+      console.log("Form values:", formValues);
       onSave(formValues);
+      handleNext();
+    } catch (error) {
+      console.error("Validation error:", error);
     }
-  }, [formValues, isValid, isDirty, onSave]);
+  };
 
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom fontWeight={600}>
-        Dati Anagrafici
-      </Typography>
-      <Typography variant="body2" color="text.secondary" mb={3}>
-        Inserisci i tuoi dati personali e accademici. Questi dati ci aiuteranno
-        a creare un profilo completo e a suggerirti opportunità di carriera
-        adatte al tuo percorso.
-      </Typography>
+    <Card elevation={3} sx={{ borderRadius: 3 }}>
+      <CardContent sx={{ p: { xs: 2, md: 4 }, minHeight: 400 }}>
+        <Box>
+          <Typography variant="h5" gutterBottom fontWeight={600}>
+            Dati Anagrafici
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mb={3}>
+            Inserisci i tuoi dati personali e accademici. Questi dati ci
+            aiuteranno a creare un profilo completo e a suggerirti opportunità
+            di carriera adatte al tuo percorso.
+          </Typography>
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        I tuoi dati saranno utilizzati esclusivamente per il Career Coaching e
-        non saranno condivisi con terze parti.
-      </Alert>
+          <Alert severity="info" sx={{ mb: 3 }}>
+            I tuoi dati saranno utilizzati esclusivamente per il Career Coaching
+            e non saranno condivisi con terze parti.
+          </Alert>
 
-      <Grid container spacing={3}>
-        {/* Nome e Cognome */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="firstName"
-            control={control}
-            render={({ field }) => (
-              <Stack spacing={1}>
-                <FormLabel>Nome *</FormLabel>
-                <TextField
-                  {...field}
-                  fullWidth
-                  error={!!errors.firstName}
-                  helperText={errors.firstName?.message}
-                  variant="outlined"
-                />
-              </Stack>
-            )}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="lastName"
-            control={control}
-            render={({ field }) => (
-              <Stack spacing={1}>
-                <FormLabel>Cognome *</FormLabel>
-                <TextField
-                  {...field}
-                  fullWidth
-                  error={!!errors.lastName}
-                  helperText={errors.lastName?.message}
-                  variant="outlined"
-                />
-              </Stack>
-            )}
-          />
-        </Grid>
-
-        {/* Età */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="age"
-            control={control}
-            render={({ field }) => (
-              <Stack spacing={1}>
-                <FormLabel>Età *</FormLabel>
-                <TextField
-                  {...field}
-                  fullWidth
-                  type="number"
-                  error={!!errors.age}
-                  helperText={errors.age?.message}
-                  variant="outlined"
-                  inputProps={{ min: 18, max: 100 }}
-                />
-              </Stack>
-            )}
-          />
-        </Grid>
-
-        {/* Università */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="university"
-            defaultValue={formValues.university}
-            control={control}
-            render={({ field }) => (
-              <Stack spacing={1}>
-                <FormLabel>Università *</FormLabel>
-                <Autocomplete
-                  options={ITALIAN_UNIVERSITIES}
-                  getOptionLabel={(option) => {
-                    if (typeof option === "string") return option;
-                    return option.label;
-                  }}
-                  isOptionEqualToValue={(option, value) => {
-                    if (
-                      typeof option === "string" ||
-                      typeof value === "string"
-                    ) {
-                      return option === value;
-                    }
-                    return option.value === value.value;
-                  }}
-                  value={
-                    ITALIAN_UNIVERSITIES.find(
-                      (uni) => uni.value === field.value
-                    ) ||
-                    field.value ||
-                    null
-                  }
-                  onChange={(_, newValue) => {
-                    // Se newValue è un oggetto, salva il value (ID ateneo)
-                    if (newValue && typeof newValue === "object") {
-                      field.onChange(newValue.value);
-                    } else {
-                      // Se è una stringa (freeSolo), salva la stringa
-                      field.onChange(newValue || "");
-                    }
-                  }}
-                  freeSolo
-                  renderInput={(params) => (
+          <Grid container spacing={3}>
+            {/* Nome e Cognome */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Controller
+                name="firstName"
+                control={control}
+                render={({ field }) => (
+                  <Stack spacing={1}>
+                    <FormLabel>Nome *</FormLabel>
                     <TextField
-                      {...params}
-                      error={!!errors.university}
-                      helperText={errors.university?.message}
+                      {...field}
+                      fullWidth
+                      error={!!errors.firstName}
+                      helperText={errors.firstName?.message}
                       variant="outlined"
                     />
-                  )}
-                />
-              </Stack>
-            )}
-          />
-        </Grid>
+                  </Stack>
+                )}
+              />
+            </Grid>
 
-        {/* Tipo Laurea */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="degreeType"
-            defaultValue={formValues.degreeType}
-            control={control}
-            render={({ field }) => (
-              <Stack spacing={1}>
-                <FormLabel>Tipo di Laurea *</FormLabel>
-                <TextField
-                  {...field}
-                  fullWidth
-                  select
-                  error={!!errors.degreeType}
-                  helperText={errors.degreeType?.message}
-                  variant="outlined"
-                >
-                  <MenuItem value="unselected">
-                    <em>Seleziona...</em>
-                  </MenuItem>
-                  {Object.entries(DEGREE_TYPE_LABELS).map(([value, label]) => (
-                    <MenuItem key={value} value={value}>
-                      {label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Stack>
-            )}
-          />
-        </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Controller
+                name="lastName"
+                control={control}
+                render={({ field }) => (
+                  <Stack spacing={1}>
+                    <FormLabel>Cognome *</FormLabel>
+                    <TextField
+                      {...field}
+                      fullWidth
+                      error={!!errors.lastName}
+                      helperText={errors.lastName?.message}
+                      variant="outlined"
+                    />
+                  </Stack>
+                )}
+              />
+            </Grid>
 
-        {/* Corso di Studi */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="courseOfStudy"
-            defaultValue={formValues.courseOfStudy}
-            control={control}
-            render={() => (
-              <Stack spacing={1}>
-                <FormLabel>Corso di Studi *</FormLabel>
-                <TextField
-                  name="courseOfStudy"
-                  defaultValue={formValues.courseOfStudy}
-                  fullWidth
-                  error={!!errors.courseOfStudy}
-                  helperText={
-                    errors.courseOfStudy?.message ||
-                    "Es. Ingegneria Informatica, Computer Science"
-                  }
-                  variant="outlined"
-                />
-              </Stack>
-            )}
-          />
-        </Grid>
+            {/* Età */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Controller
+                name="age"
+                control={control}
+                render={({ field }) => (
+                  <Stack spacing={1}>
+                    <FormLabel>Età *</FormLabel>
+                    <TextField
+                      {...field}
+                      fullWidth
+                      type="number"
+                      error={!!errors.age}
+                      helperText={errors.age?.message}
+                      variant="outlined"
+                      inputProps={{ min: 18, max: 100 }}
+                    />
+                  </Stack>
+                )}
+              />
+            </Grid>
 
-        {/* Anno di Laurea */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="graduationYear"
-            defaultValue={formValues.graduationYear}
-            control={control}
-            render={({}) => (
-              <Stack spacing={1}>
-                <FormLabel>Anno di Laurea *</FormLabel>
-                <TextField
-                  name="graduationYear"
-                  defaultValue={formValues.graduationYear}
-                  fullWidth
-                  error={!!errors.graduationYear}
-                  variant="outlined"
-                />
-              </Stack>
-            )}
-          />
-        </Grid>
-      </Grid>
-    </Box>
+            {/* Università */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Controller
+                name="university"
+                defaultValue={formValues.university}
+                control={control}
+                render={({ field }) => (
+                  <Stack spacing={1}>
+                    <FormLabel>Università *</FormLabel>
+                    <Autocomplete
+                      options={ITALIAN_UNIVERSITIES}
+                      getOptionLabel={(option) => {
+                        if (typeof option === "string") return option;
+                        return option.label;
+                      }}
+                      isOptionEqualToValue={(option, value) => {
+                        if (
+                          typeof option === "string" ||
+                          typeof value === "string"
+                        ) {
+                          return option === value;
+                        }
+                        return option.value === value.value;
+                      }}
+                      value={
+                        ITALIAN_UNIVERSITIES.find(
+                          (uni) => uni.value === field.value
+                        ) ||
+                        field.value ||
+                        null
+                      }
+                      onChange={(_, newValue) => {
+                        // Se newValue è un oggetto, salva il value (ID ateneo)
+                        if (newValue && typeof newValue === "object") {
+                          field.onChange(newValue.value);
+                        } else {
+                          // Se è una stringa (freeSolo), salva la stringa
+                          field.onChange(newValue || "");
+                        }
+                      }}
+                      freeSolo
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.university}
+                          helperText={errors.university?.message}
+                          variant="outlined"
+                        />
+                      )}
+                    />
+                  </Stack>
+                )}
+              />
+            </Grid>
+
+            {/* Tipo Laurea */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Controller
+                name="degreeType"
+                defaultValue={formValues.degreeType}
+                control={control}
+                render={({ field }) => (
+                  <Stack spacing={1}>
+                    <FormLabel>Tipo di Laurea *</FormLabel>
+                    <TextField
+                      {...field}
+                      fullWidth
+                      select
+                      error={!!errors.degreeType}
+                      helperText={errors.degreeType?.message}
+                      variant="outlined"
+                    >
+                      <MenuItem value="unselected">
+                        <em>Seleziona...</em>
+                      </MenuItem>
+                      {Object.entries(DEGREE_TYPE_LABELS).map(
+                        ([value, label]) => (
+                          <MenuItem key={value} value={value}>
+                            {label}
+                          </MenuItem>
+                        )
+                      )}
+                    </TextField>
+                  </Stack>
+                )}
+              />
+            </Grid>
+
+            {/* Corso di Studi */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Controller
+                name="courseOfStudy"
+                defaultValue={formValues.courseOfStudy}
+                control={control}
+                render={() => (
+                  <Stack spacing={1}>
+                    <FormLabel>Corso di Studi *</FormLabel>
+                    <TextField
+                      name="courseOfStudy"
+                      defaultValue={formValues.courseOfStudy}
+                      fullWidth
+                      error={!!errors.courseOfStudy}
+                      helperText={
+                        errors.courseOfStudy?.message ||
+                        "Es. Ingegneria Informatica, Computer Science"
+                      }
+                      onChange={(e) => {
+                        setValue("courseOfStudy", e.target.value);
+                      }}
+                      variant="outlined"
+                    />
+                  </Stack>
+                )}
+              />
+            </Grid>
+
+            {/* Anno di Laurea */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Controller
+                name="graduationYear"
+                defaultValue={formValues.graduationYear}
+                control={control}
+                render={({}) => (
+                  <Stack spacing={1}>
+                    <FormLabel>Anno di Laurea *</FormLabel>
+                    <TextField
+                      name="graduationYear"
+                      defaultValue={formValues.graduationYear}
+                      fullWidth
+                      error={!!errors.graduationYear}
+                      variant="outlined"
+                    />
+                  </Stack>
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      </CardContent>
+
+      <CardActions sx={{ p: { xs: 2, md: 3 }, bgcolor: "grey.50" }}>
+        <Box display="flex" justifyContent="space-between" width="100%" gap={2}>
+          <Box></Box>
+
+          <Box display="flex" gap={2}>
+            {/* Next/Complete Button */}
+            <Button
+              variant="contained"
+              onClick={handleNextStep}
+              disabled={isLoading}
+              endIcon={
+                isLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <ArrowForwardIcon />
+                )
+              }
+              size="large"
+            >
+              {isLoading ? "Salvataggio..." : "Avanti"}
+            </Button>
+          </Box>
+        </Box>
+      </CardActions>
+    </Card>
   );
 };
 

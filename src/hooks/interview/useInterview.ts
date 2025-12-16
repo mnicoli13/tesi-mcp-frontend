@@ -10,6 +10,7 @@ import {
   INITIAL_INTERVIEW_DATA,
   InterviewStep,
 } from "../../types/interview";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Hook personalizzato per gestire l'intervista
@@ -24,6 +25,7 @@ export const useInterview = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   /**
    * Carica il progresso dell'intervista all'avvio
@@ -37,6 +39,7 @@ export const useInterview = () => {
       if (prev < InterviewStep.SKILLS) {
         return prev + 1;
       }
+      navigate("/chat");
       return prev;
     });
   }, []);

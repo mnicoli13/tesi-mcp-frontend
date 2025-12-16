@@ -18,8 +18,6 @@ import {
   DialogActions,
   LinearProgress,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import { useInterview as useInterview2 } from "../hooks/interview/useInterview";
@@ -29,13 +27,6 @@ import Step2Exams from "../components/interview/Step2Exams";
 import Step3Interests from "../components/interview/Step3Interests";
 import Step4Experiences from "../components/interview/Step4Experiences";
 import Step5Skills from "../components/interview/Step5Skills";
-import {
-  personalDataSchema,
-  examDataSchema,
-  interestsDataSchema,
-  skillsDataSchema,
-} from "../schemas/interviewSchemas";
-import { interviewService } from "../services/interviewService";
 
 const Interview: React.FC = () => {
   const navigate = useNavigate();
@@ -56,143 +47,13 @@ const Interview: React.FC = () => {
   } = useInterview2();
 
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-
-  const validateCurrentStep = async () => {
-    try {
-      switch (currentStep) {
-        case InterviewStep.PERSONAL:
-          if (interviewData.personal) {
-            await personalDataSchema.validate(interviewData.personal);
-            setValidationError(null);
-            return true;
-          } else {
-            console.log("setCanProceed false");
-            return false;
-          }
-
-        case InterviewStep.EXAMS:
-          if (interviewData.exams) {
-            await examDataSchema.validate(interviewData.exams);
-            setValidationError(null);
-            return true;
-          } else {
-            console.log("setCanProceed false 2");
-            return false;
-          }
-
-        case InterviewStep.INTERESTS:
-          if (interviewData.interests) {
-            await interestsDataSchema.validate(interviewData.interests);
-            setValidationError(null);
-            return true;
-          } else {
-            console.log("setCanProceed false 3");
-            return false;
-          }
-
-        case InterviewStep.EXPERIENCES:
-          // always valid
-          setValidationError(null);
-          return true;
-
-        case InterviewStep.SKILLS:
-          if (interviewData.skills) {
-            await skillsDataSchema.validate(interviewData.skills);
-            setValidationError(null);
-            return true;
-          } else {
-            console.log("setCanProceed false 4");
-            return false;
-          }
-
-        default:
-          console.log("setCanProceed false 5");
-          return false;
-      }
-    } catch (error: any) {
-      console.log("setCanProceed false 6");
-      setValidationError(error.message);
-      return false;
-    }
-  };
-
-  const handleNext = async () => {
-    const canProceed = await validateCurrentStep();
-    if (!canProceed || isSaving) {
-      return;
-    }
-
-    try {
-      setValidationError(null);
-      setIsSaving(true);
-
-      // Determina se è un update (step già completato) o un create (prima volta)
-      const isUpdate = isStepCompleted(currentStep);
-
-      // Salva i dati dello step corrente al backend usando l'endpoint appropriato
-      switch (currentStep) {
-        case InterviewStep.PERSONAL:
-          if (interviewData.personal) {
-            await (isUpdate
-              ? interviewService.updateStep1(interviewData.personal)
-              : interviewService.saveStep1(interviewData.personal));
-          }
-          break;
-
-        case InterviewStep.EXAMS:
-          if (interviewData.exams) {
-            await (isUpdate
-              ? interviewService.updateStep2(interviewData.exams)
-              : interviewService.saveStep2(interviewData.exams));
-          }
-          break;
-
-        case InterviewStep.INTERESTS:
-          if (interviewData.interests) {
-            await (isUpdate
-              ? interviewService.updateStep3(interviewData.interests)
-              : interviewService.saveStep3(interviewData.interests));
-          }
-          break;
-
-        case InterviewStep.EXPERIENCES:
-          if (interviewData.experiences) {
-            await (isUpdate
-              ? interviewService.updateStep4(interviewData.experiences)
-              : interviewService.saveStep4(interviewData.experiences));
-          }
-          break;
-
-        case InterviewStep.SKILLS:
-          if (interviewData.skills) {
-            await (isUpdate
-              ? interviewService.updateStep5(interviewData.skills)
-              : interviewService.saveStep5(interviewData.skills));
-          }
-          break;
-      }
-
-      if (currentStep === InterviewStep.SKILLS) {
-        // Last step - show completion dialog
-        setShowCompletionDialog(true);
-      } else {
-        goToNextStep();
-      }
-    } catch (error: any) {
-      console.error("Error saving interview data:", error);
-      setValidationError(
-        error.response?.data?.message ||
-          "Errore nel salvataggio dei dati. Riprova."
-      );
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleBack = () => {
     goToPreviousStep();
+  };
+
+  const handleNext = () => {
+    goToNextStep();
   };
 
   const handleComplete = async () => {
@@ -213,17 +74,28 @@ const Interview: React.FC = () => {
           <Step1Personal
             initialData={interviewData.personal}
             onSave={saveStep1}
+            handleNext={handleNext}
+            isLoading={isLoading}
           />
         );
       case InterviewStep.EXAMS:
         return (
-          <Step2Exams initialData={interviewData.exams} onSave={saveStep2} />
+          <Step2Exams
+            initialData={interviewData.exams}
+            saveStep2={saveStep2}
+            handleNext={handleNext}
+            handleBack={handleBack}
+            isLoading={isLoading}
+          />
         );
       case InterviewStep.INTERESTS:
         return (
           <Step3Interests
             initialData={interviewData.interests}
             onSave={saveStep3}
+            handleNext={handleNext}
+            handleBack={handleBack}
+            isLoading={isLoading}
           />
         );
       case InterviewStep.EXPERIENCES:
@@ -231,11 +103,20 @@ const Interview: React.FC = () => {
           <Step4Experiences
             initialData={interviewData.experiences}
             onSave={saveStep4}
+            handleNext={handleNext}
+            handleBack={handleBack}
+            isLoading={isLoading}
           />
         );
       case InterviewStep.SKILLS:
         return (
-          <Step5Skills initialData={interviewData.skills} onSave={saveStep5} />
+          <Step5Skills
+            initialData={interviewData.skills}
+            handleNext={handleNext}
+            onSave={saveStep5}
+            handleBack={handleBack}
+            isLoading={isLoading}
+          />
         );
       default:
         return null;
@@ -289,71 +170,7 @@ const Interview: React.FC = () => {
           ))}
         </Stepper>
 
-        {/* Validation Error */}
-        {validationError && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {validationError}
-          </Alert>
-        )}
-
-        {/* Step Content Card */}
-        <Card elevation={3} sx={{ borderRadius: 3 }}>
-          <CardContent sx={{ p: { xs: 2, md: 4 }, minHeight: 400 }}>
-            {renderStepContent()}
-          </CardContent>
-
-          <CardActions sx={{ p: { xs: 2, md: 3 }, bgcolor: "grey.50" }}>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              width="100%"
-              gap={2}
-            >
-              {/* Back Button */}
-              <Button
-                variant="outlined"
-                onClick={handleBack}
-                disabled={currentStep === InterviewStep.PERSONAL}
-                startIcon={<ArrowBackIcon />}
-                size="large"
-              >
-                Indietro
-              </Button>
-
-              <Box display="flex" gap={2}>
-                {/* Skip Button (only for experiences step) */}
-                {currentStep === InterviewStep.EXPERIENCES && (
-                  <Button variant="text" onClick={handleNext} size="large">
-                    Salta
-                  </Button>
-                )}
-
-                {/* Next/Complete Button */}
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  disabled={isLoading || isSaving}
-                  endIcon={
-                    isSaving ? (
-                      <CircularProgress size={20} color="inherit" />
-                    ) : currentStep === InterviewStep.SKILLS ? (
-                      <CheckCircleIcon />
-                    ) : (
-                      <ArrowForwardIcon />
-                    )
-                  }
-                  size="large"
-                >
-                  {isSaving
-                    ? "Salvataggio..."
-                    : currentStep === InterviewStep.SKILLS
-                    ? "Completa"
-                    : "Avanti"}
-                </Button>
-              </Box>
-            </Box>
-          </CardActions>
-        </Card>
+        {renderStepContent()}
 
         {/* Info Box */}
         <Alert severity="info" sx={{ mt: 3 }}>
