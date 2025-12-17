@@ -28,8 +28,8 @@ export function useLogin() {
     resolver: yupResolver(loginSchema),
     mode: "onChange",
     defaultValues: {
-      email: "m.nicoli13@studenti.unibg.it",
-      password: "Matteo03",
+      email: "",
+      password: "",
     },
   });
 

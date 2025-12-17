@@ -33,11 +33,11 @@ export function useRegister() {
     resolver: yupResolver(registerSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: "Matteo",
-      lastName: "Nicoli",
-      email: "m.nicoli13@studenti.unibg.it",
-      password: "Matteo03",
-      confirmPassword: "Matteo03",
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
