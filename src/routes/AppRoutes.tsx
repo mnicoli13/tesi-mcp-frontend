@@ -7,6 +7,7 @@ import About from "../views/About";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Interview from "../views/Interview";
+import UserProfile from "../views/UserProfile";
 import ProtectedRoute from "../components/common/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
 
@@ -68,6 +69,14 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <Interview />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <UserProfile />
             </ProtectedRoute>
           }
         />

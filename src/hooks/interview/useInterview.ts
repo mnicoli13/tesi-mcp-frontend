@@ -53,6 +53,12 @@ export const useInterview = () => {
     });
   }, []);
 
+  const goToStep = useCallback((step: InterviewStep) => {
+    if (step >= InterviewStep.PERSONAL && step <= InterviewStep.SKILLS) {
+      setCurrentStep(step);
+    }
+  }, []);
+
   /**
    * Carica il progresso dell'intervista
    */
@@ -252,5 +258,6 @@ export const useInterview = () => {
     isStepCompleted,
     goToNextStep,
     goToPreviousStep,
+    goToStep,
   };
 };

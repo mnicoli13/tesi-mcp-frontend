@@ -135,9 +135,7 @@ const Step2Exams: React.FC<Step2ExamsProps> = ({
             Esami e Voti
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={3}>
-            Inserisci i tuoi esami sostenuti con i rispettivi voti e CFU. Potrai
-            selezionare gli esami che hai preferito e che riflettono meglio le
-            tue competenze.
+            Inserisci i tuoi esami sostenuti con i rispettivi voti e CFU.
           </Typography>
 
           {exams.length === 0 && (

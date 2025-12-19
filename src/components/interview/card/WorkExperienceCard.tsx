@@ -12,7 +12,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 interface WorkExperienceCardProps {
   workExperience: WorkExperience;
-  handleDeleteWorkExperience: (id: string) => void;
+  handleDeleteWorkExperience?: (id: string) => void;
+  readOnly?: boolean;
 }
 
 const CONTRACT_TYPE_LABELS = {
@@ -24,6 +25,7 @@ const CONTRACT_TYPE_LABELS = {
 const WorkExperienceCard: React.FC<WorkExperienceCardProps> = ({
   workExperience,
   handleDeleteWorkExperience,
+  readOnly = false,
 }) => {
   const formatDate = (dateStr: string) => {
     if (dateStr === "present") return "Presente";
@@ -76,13 +78,15 @@ const WorkExperienceCard: React.FC<WorkExperienceCardProps> = ({
                 </Stack>
               )}
           </Box>
-          <IconButton
-            aria-label="delete"
-            onClick={() => handleDeleteWorkExperience(workExperience.id!)}
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
+          {!readOnly && handleDeleteWorkExperience && (
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleDeleteWorkExperience(workExperience.id!)}
+              color="error"
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
         </Box>
       </CardContent>
     </Card>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -257,7 +257,6 @@ const Step5Skills: React.FC<Step5SkillsProps> = ({
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Seleziona o scrivi"
                         placeholder="Es. B (Autoveicoli), A (Motocicli)..."
                       />
                     )}
