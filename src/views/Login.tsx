@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Card,
@@ -13,29 +13,32 @@ import {
   Container,
   IconButton,
   InputAdornment,
-} from '@mui/material';
-import { 
+} from "@mui/material";
+import {
   LoginRounded as LoginIcon,
   Visibility,
   VisibilityOff,
-} from '@mui/icons-material';
-import { useLogin } from '../hooks';
+} from "@mui/icons-material";
+import { useLogin } from "../hooks";
 
 /**
  * Pagina di Login
- * 
+ *
  * Features:
  * - Form con validazione email/password
  * - Toggle visibilità password
  * - Gestione errori e loading states
  * - Link a pagina registrazione
  * - Redirect dopo login riuscito
- * 
+ *
  * La logica di business è gestita dal custom hook useLogin
  */
 export default function Login() {
   const { form, isSubmitting, error, clearError, onSubmit } = useLogin();
-  const { register, formState: { errors } } = form;
+  const {
+    register,
+    formState: { errors },
+  } = form;
   const [showPassword, setShowPassword] = useState(false);
 
   const handleTogglePasswordVisibility = () => {
@@ -45,11 +48,11 @@ export default function Login() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'background.default',
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "background.default",
         py: 4,
       }}
     >
@@ -57,11 +60,11 @@ export default function Login() {
         <Card elevation={2}>
           <CardContent sx={{ p: 4 }}>
             {/* Header */}
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Box sx={{ textAlign: "center", mb: 4 }}>
               <LoginIcon
                 sx={{
                   fontSize: 56,
-                  color: 'primary.main',
+                  color: "primary.main",
                   mb: 2,
                 }}
               />
@@ -69,7 +72,7 @@ export default function Login() {
                 Accedi
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Benvenuto in Career Coach MCP
+                Benvenuto in Student Career Coach MCP
               </Typography>
             </Box>
 
@@ -81,14 +84,10 @@ export default function Login() {
             )}
 
             {/* Form */}
-            <Box
-              component="form"
-              onSubmit={onSubmit}
-              noValidate
-            >
+            <Box component="form" onSubmit={onSubmit} noValidate>
               {/* Email Field */}
               <TextField
-                {...register('email')}
+                {...register("email")}
                 label="Email"
                 type="email"
                 fullWidth
@@ -102,9 +101,9 @@ export default function Login() {
 
               {/* Password Field */}
               <TextField
-                {...register('password')}
+                {...register("password")}
                 label="Password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 fullWidth
                 autoComplete="current-password"
                 error={!!errors.password}
@@ -137,16 +136,18 @@ export default function Login() {
                 fullWidth
                 size="large"
                 disabled={isSubmitting}
-                startIcon={isSubmitting ? <CircularProgress size={20} /> : <LoginIcon />}
+                startIcon={
+                  isSubmitting ? <CircularProgress size={20} /> : <LoginIcon />
+                }
               >
-                {isSubmitting ? 'Accesso in corso...' : 'Accedi'}
+                {isSubmitting ? "Accesso in corso..." : "Accedi"}
               </Button>
             </Box>
 
             {/* Divider */}
-            <Box sx={{ mt: 3, textAlign: 'center' }}>
+            <Box sx={{ mt: 3, textAlign: "center" }}>
               <Typography variant="body2" color="text.secondary">
-                Non hai un account?{' '}
+                Non hai un account?{" "}
                 <Link
                   component={RouterLink}
                   to="/register"
@@ -161,7 +162,7 @@ export default function Login() {
         </Card>
 
         {/* Footer Info */}
-        <Box sx={{ mt: 3, textAlign: 'center' }}>
+        <Box sx={{ mt: 3, textAlign: "center" }}>
           <Typography variant="caption" color="text.secondary">
             Sistema di Career Coaching - Tesi Universitaria
           </Typography>

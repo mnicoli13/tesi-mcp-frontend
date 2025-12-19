@@ -32,7 +32,7 @@ export default function Chat() {
     }
   };
 
-  const headerHeight = 64;
+  const headerHeight = 48;
   // const footerHeight = 52;
   // const containerPadding = 24;
   // const fixedComponentsHeight = headerHeight;

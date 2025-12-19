@@ -55,7 +55,7 @@ export default function ChatHeader() {
         </IconButton>
         <AutoAwesome sx={{ mr: 2 }} />
         <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
-          MCP
+          Student Career Coach MCP
         </Typography>
         <Chip
           label="Connected"

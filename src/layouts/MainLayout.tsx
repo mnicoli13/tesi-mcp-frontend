@@ -8,7 +8,7 @@ export default function MainLayout() {
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
       {/* Toolbar spacer per compensare l'header fixed */}
-      <Toolbar />
+      <Toolbar sx={{ minHeight: "48px !important" }} />
       <Container component="main" sx={{ flexGrow: 1 }}>
         <Outlet /> {/* Qui verranno renderizzate le view */}
       </Container>
