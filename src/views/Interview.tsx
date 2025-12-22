@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import {
   Box,
   Container,
-  Card,
-  CardContent,
-  CardActions,
   Button,
   Typography,
   Stepper,
@@ -19,7 +16,7 @@ import {
   LinearProgress,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useInterview as useInterview2 } from "../hooks/interview/useInterview";
 import { InterviewStep, INTERVIEW_STEP_LABELS } from "../types/interview";
 import Step1Personal from "../components/interview/Step1Personal";
@@ -27,9 +24,14 @@ import Step2Exams from "../components/interview/Step2Exams";
 import Step3Interests from "../components/interview/Step3Interests";
 import Step4Experiences from "../components/interview/Step4Experiences";
 import Step5Skills from "../components/interview/Step5Skills";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Interview: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  const fromProfile = location.state?.from === "/profile";
 
   const {
     interviewData,
@@ -37,6 +39,7 @@ const Interview: React.FC = () => {
     isLoading,
     goToNextStep,
     goToPreviousStep,
+    goToStep,
     isStepCompleted,
     saveStep1,
     saveStep2,
@@ -47,6 +50,17 @@ const Interview: React.FC = () => {
   } = useInterview2();
 
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
+
+  // Read step from URL query parameter on mount
+  React.useEffect(() => {
+    const stepParam = searchParams.get("step");
+    if (stepParam !== null) {
+      const stepNumber = parseInt(stepParam, 10);
+      if (stepNumber >= 0 && stepNumber <= 4) {
+        goToStep(stepNumber as InterviewStep);
+      }
+    }
+  }, [searchParams, goToStep]);
 
   const handleBack = () => {
     goToPreviousStep();
@@ -128,6 +142,17 @@ const Interview: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Box py={4}>
+        {fromProfile && (
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate("/profile")}
+            sx={{ mb: 2 }}
+            size="small"
+            color="inherit"
+          >
+            Torna al Profilo
+          </Button>
+        )}
         {/* Header */}
         <Box mb={4}>
           <Typography variant="h4" gutterBottom fontWeight={700}>
@@ -171,13 +196,6 @@ const Interview: React.FC = () => {
         </Stepper>
 
         {renderStepContent()}
-
-        {/* Info Box */}
-        <Alert severity="info" sx={{ mt: 3 }}>
-          <strong>Info:</strong> I tuoi dati vengono salvati automaticamente.
-          Puoi tornare indietro e modificare le tue risposte in qualsiasi
-          momento.
-        </Alert>
       </Box>
 
       {/* Completion Dialog */}

@@ -12,12 +12,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 interface StageCardProps {
   internship: Internship;
-  handleDeleteInternship: (id: string) => void;
+  handleDeleteInternship?: (id: string) => void;
+  readOnly?: boolean;
 }
 
 const StageCard: React.FC<StageCardProps> = ({
   internship,
   handleDeleteInternship,
+  readOnly = false,
 }) => {
   return (
     <Card key={internship.id} elevation={2} sx={{ mb: 2 }}>
@@ -58,13 +60,15 @@ const StageCard: React.FC<StageCardProps> = ({
               </Stack>
             )}
           </Box>
-          <IconButton
-            aria-label="delete"
-            onClick={() => handleDeleteInternship(internship.id!)}
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
+          {!readOnly && handleDeleteInternship && (
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleDeleteInternship(internship.id!)}
+              color="error"
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
         </Box>
       </CardContent>
     </Card>

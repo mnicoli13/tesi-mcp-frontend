@@ -11,12 +11,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 interface EducationCardProps {
   education: Education;
-  handleDeleteEducation: (id: string) => void;
+  handleDeleteEducation?: (id: string) => void;
+  readOnly?: boolean;
 }
 
 const EducationCard: React.FC<EducationCardProps> = ({
   education,
   handleDeleteEducation,
+  readOnly = false,
 }) => {
   const formatYearRange = () => {
     if (!education.endYear) {
@@ -62,13 +64,15 @@ const EducationCard: React.FC<EducationCardProps> = ({
               </Typography>
             )}
           </Box>
-          <IconButton
-            aria-label="delete"
-            onClick={() => handleDeleteEducation(education.id!)}
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
+          {!readOnly && handleDeleteEducation && (
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleDeleteEducation(education.id!)}
+              color="error"
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
         </Box>
       </CardContent>
     </Card>

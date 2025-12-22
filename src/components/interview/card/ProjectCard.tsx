@@ -14,13 +14,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 interface ProjectCardProps {
   project: Project;
   type: "university" | "personal";
-  handleDeleteProject: (id: string, type: "university" | "personal") => void;
+  handleDeleteProject?: (id: string, type: "university" | "personal") => void;
+  readOnly?: boolean;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
   type,
   handleDeleteProject,
+  readOnly = false,
 }) => {
   return (
     <Card key={project.id} elevation={2} sx={{ mb: 2 }}>
@@ -61,13 +63,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               </Stack>
             )}
           </Box>
-          <IconButton
-            aria-label="delete"
-            onClick={() => handleDeleteProject(project.id!, type)}
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
+          {!readOnly && handleDeleteProject && (
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleDeleteProject(project.id!, type)}
+              color="error"
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
         </Box>
       </CardContent>
     </Card>

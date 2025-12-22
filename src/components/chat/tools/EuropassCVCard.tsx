@@ -6,22 +6,55 @@ import {
   Language,
   EmojiObjects,
   AccountBox,
+  Work,
+  Build,
+  DriveEta,
+  Phone,
+  Home,
 } from "@mui/icons-material";
 
 interface PersonalInfo {
   first_name: string;
   last_name: string;
   email: string;
-  age: number;
+  age?: number;
+  phone?: string;
+  address?: string;
+  city?: string;
+  postal_code?: string;
+  driver_licenses?: string[];
 }
 
 interface Education {
   degree: string;
+  field_of_study?: string;
   institution: string;
-  country: string;
+  city?: string;
+  country?: string;
   start_year: number;
   end_year: number;
+  grade?: string;
   subjects?: string[];
+}
+
+interface WorkExperience {
+  role: string;
+  company: string;
+  contract_type?: string;
+  city?: string;
+  country?: string;
+  start_date: string;
+  end_date?: string;
+  description: string;
+  ai_generated_description?: string;
+  achievements?: string[];
+}
+
+interface Project {
+  title: string;
+  description: string;
+  technologies?: string;
+  link?: string;
 }
 
 interface LanguageSkill {
@@ -34,10 +67,10 @@ interface CVData {
     personal_info: PersonalInfo;
     professional_objective?: string;
     education?: Education[];
-    work_experience?: any[];
+    work_experience?: WorkExperience[];
     technical_skills?: string[];
     soft_skills?: string[];
-    projects?: any[];
+    projects?: Project[];
     languages?: LanguageSkill[];
     other_info?: string;
   };
@@ -55,8 +88,10 @@ export default function EuropassCVCard({ cvData }: EuropassCVCardProps) {
     personal_info,
     professional_objective,
     education,
+    work_experience,
     technical_skills,
     soft_skills,
+    projects,
     languages,
     other_info,
   } = cv_sections;
@@ -102,7 +137,54 @@ export default function EuropassCVCard({ cvData }: EuropassCVCardProps) {
           {personal_info.first_name} {personal_info.last_name}
         </Typography>
         <Typography variant="subtitle1">{personal_info.email}</Typography>
-        <Typography variant="body2">Età: {personal_info.age} anni</Typography>
+        {personal_info.age && (
+          <Typography variant="body2">Età: {personal_info.age} anni</Typography>
+        )}
+        {personal_info.phone && (
+          <Stack direction="row" spacing={1} alignItems="center" mt={0.5}>
+            <Phone fontSize="small" />
+            <Typography variant="body2">{personal_info.phone}</Typography>
+          </Stack>
+        )}
+        {(personal_info.address ||
+          personal_info.city ||
+          personal_info.postal_code) && (
+          <Stack direction="row" spacing={1} alignItems="center" mt={0.5}>
+            <Home fontSize="small" />
+            <Typography variant="body2">
+              {[
+                personal_info.address,
+                personal_info.postal_code,
+                personal_info.city,
+              ]
+                .filter(Boolean)
+                .join(", ")}
+            </Typography>
+          </Stack>
+        )}
+        {personal_info.driver_licenses &&
+          personal_info.driver_licenses.length > 0 && (
+            <Stack direction="row" spacing={1} alignItems="center" mt={1}>
+              <DriveEta fontSize="small" />
+              <Typography variant="body2" mr={1}>
+                Patenti:
+              </Typography>
+              <Stack direction="row" spacing={0.5}>
+                {personal_info.driver_licenses.map((license, idx) => (
+                  <Chip
+                    key={idx}
+                    label={license}
+                    size="small"
+                    sx={{
+                      bgcolor: "white",
+                      color: "primary.main",
+                      fontWeight: "bold",
+                    }}
+                  />
+                ))}
+              </Stack>
+            </Stack>
+          )}
       </Box>
 
       {/* Content */}
@@ -137,11 +219,23 @@ export default function EuropassCVCard({ cvData }: EuropassCVCardProps) {
                 <Typography variant="subtitle1" fontWeight="bold">
                   {edu.degree}
                 </Typography>
+                {edu.field_of_study && (
+                  <Typography
+                    variant="body2"
+                    color="primary.main"
+                    fontWeight="medium"
+                  >
+                    {edu.field_of_study}
+                  </Typography>
+                )}
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  {edu.institution} • {edu.country}
+                  {edu.institution}
+                  {edu.city && ` • ${edu.city}`}
+                  {edu.country && ` • ${edu.country}`}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   {edu.start_year} - {edu.end_year}
+                  {edu.grade && ` • Voto: ${edu.grade}`}
                 </Typography>
                 {edu.subjects && edu.subjects.length > 0 && (
                   <Box mt={1}>
@@ -166,6 +260,156 @@ export default function EuropassCVCard({ cvData }: EuropassCVCardProps) {
                       ))}
                     </Stack>
                   </Box>
+                )}
+              </Box>
+            ))}
+            <Divider sx={{ my: 3 }} />
+          </>
+        )}
+
+        {/* Work Experience */}
+        {work_experience && work_experience.length > 0 && (
+          <>
+            <SectionTitle
+              icon={<Work color="primary" />}
+              title="Esperienze Lavorative"
+            />
+            {work_experience.map((exp, idx) => (
+              <Box key={idx} mb={3}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {exp.role}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="primary.main"
+                  fontWeight="medium"
+                >
+                  {exp.company}
+                  {exp.contract_type && ` • ${exp.contract_type}`}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  {exp.city && `${exp.city}`}
+                  {exp.city && exp.country && `, `}
+                  {exp.country && `${exp.country}`}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  display="block"
+                  mb={1}
+                >
+                  {new Date(exp.start_date).toLocaleDateString("it-IT", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                  {" - "}
+                  {exp.end_date
+                    ? new Date(exp.end_date).toLocaleDateString("it-IT", {
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "Presente"}
+                </Typography>
+
+                {/* AI Generated Description (if available) */}
+                {exp.ai_generated_description && (
+                  <Paper
+                    variant="outlined"
+                    sx={{
+                      p: 2,
+                      mb: 1,
+                      bgcolor: "primary.50",
+                      borderColor: "primary.main",
+                      borderLeft: "4px solid",
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ textAlign: "justify" }}>
+                      {exp.ai_generated_description}
+                    </Typography>
+                  </Paper>
+                )}
+
+                {/* Original Description */}
+                {exp.description && !exp.ai_generated_description && (
+                  <Typography
+                    variant="body2"
+                    paragraph
+                    sx={{ textAlign: "justify" }}
+                  >
+                    {exp.description}
+                  </Typography>
+                )}
+
+                {/* Achievements */}
+                {exp.achievements && exp.achievements.length > 0 && (
+                  <Box mt={1}>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      fontWeight="bold"
+                      display="block"
+                      mb={0.5}
+                    >
+                      Risultati principali:
+                    </Typography>
+                    <Box component="ul" sx={{ mt: 0, pl: 2 }}>
+                      {exp.achievements.map((achievement, i) => (
+                        <Typography
+                          key={i}
+                          component="li"
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 0.5 }}
+                        >
+                          {achievement}
+                        </Typography>
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+            ))}
+            <Divider sx={{ my: 3 }} />
+          </>
+        )}
+
+        {/* Projects */}
+        {projects && projects.length > 0 && (
+          <>
+            <SectionTitle icon={<Build color="primary" />} title="Progetti" />
+            {projects.map((project, idx) => (
+              <Box key={idx} mb={3}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {project.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  paragraph
+                  sx={{ textAlign: "justify", mt: 1 }}
+                >
+                  {project.description}
+                </Typography>
+                {project.technologies && (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    display="block"
+                    mb={0.5}
+                  >
+                    <strong>Tecnologie:</strong> {project.technologies}
+                  </Typography>
+                )}
+                {project.link && (
+                  <Typography variant="caption" color="primary.main">
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      🔗 {project.link}
+                    </a>
+                  </Typography>
                 )}
               </Box>
             ))}
