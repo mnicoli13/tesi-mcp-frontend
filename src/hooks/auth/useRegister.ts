@@ -46,7 +46,7 @@ export function useRegister() {
    */
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/chat", { replace: true });
+      navigate("/interview", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -73,10 +73,7 @@ export function useRegister() {
           "Registrazione completata! Reindirizzamento al login..."
         );
 
-        // Redirect a login dopo 2 secondi
-        setTimeout(() => {
-          navigate("/login", { replace: true });
-        }, 2000);
+        navigate("/login", { replace: true });
       }
     } finally {
       setIsSubmitting(false);

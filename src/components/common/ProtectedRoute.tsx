@@ -1,7 +1,7 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { Box, CircularProgress } from '@mui/material';
-import { useAuth } from '../../context/AuthContext';
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
+import { useAuth } from "../../context/AuthContext";
 
 /**
  * Props per ProtectedRoute
@@ -12,12 +12,12 @@ interface ProtectedRouteProps {
 
 /**
  * Componente wrapper per proteggere route che richiedono autenticazione
- * 
+ *
  * Comportamento:
  * - Se utente autenticato: mostra children
  * - Se non autenticato: redirect a /login
  * - Durante verifica auth: mostra loading spinner
- * 
+ *
  * @example
  * <ProtectedRoute>
  *   <ChatPage />
@@ -32,11 +32,11 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-          backgroundColor: 'background.default',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          backgroundColor: "background.default",
         }}
       >
         <CircularProgress size={48} />
