@@ -1,12 +1,18 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService } from '../services/authService';
-import type { LoginCredentials, RegisterData, AuthUser } from '../types';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { authService } from "../services/authService";
+import type { LoginCredentials, RegisterData, AuthUser } from "../types";
 
 /**
  * Tipo per lo stato del Context di Autenticazione
  */
 interface AuthContextType {
-  user: Omit<AuthUser, 'token' | 'refreshToken'> | null;
+  user: Omit<AuthUser, "token" | "refreshToken"> | null;
   loading: boolean;
   error: string | null;
   login: (credentials: LoginCredentials) => Promise<boolean>;
@@ -33,7 +39,10 @@ interface AuthProviderProps {
  * Gestisce lo stato globale dell'autenticazione dell'applicazione
  */
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<Omit<AuthUser, 'token' | 'refreshToken'> | null>(null);
+  const [user, setUser] = useState<Omit<
+    AuthUser,
+    "token" | "refreshToken"
+  > | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,13 +54,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const checkAuth = async () => {
       try {
         const isAuth = authService.isAuthenticated();
-        
+
         if (isAuth) {
           const currentUser = authService.getCurrentUser();
           setUser(currentUser);
         }
       } catch (err) {
-        console.error('Auth check failed:', err);
+        console.error("Auth check failed:", err);
         // Se c'è un errore, pulisce i dati
         authService.logout();
       } finally {
@@ -79,11 +88,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(userData);
         return true;
       } else {
-        setError(response.error?.message || 'Login fallito');
+        setError(response.error?.message || "Login fallito");
         return false;
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Errore imprevisto';
+      const errorMessage =
+        err instanceof Error ? err.message : "Errore imprevisto";
       setError(errorMessage);
       return false;
     } finally {
@@ -107,11 +117,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Registrazione riuscita - redirect a login sarà gestito dal componente
         return true;
       } else {
-        setError(response.error?.message || 'Registrazione fallita');
+        setError(response.error?.message || "Registrazione fallita");
         return false;
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Errore imprevisto';
+      const errorMessage =
+        err instanceof Error ? err.message : "Errore imprevisto";
       setError(errorMessage);
       return false;
     } finally {
@@ -162,7 +173,7 @@ export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
 
   if (context === undefined) {
-    throw new Error('useAuth deve essere usato all\'interno di un AuthProvider');
+    throw new Error("useAuth deve essere usato all'interno di un AuthProvider");
   }
 
   return context;
